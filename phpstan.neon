@@ -3,7 +3,7 @@ parameters:
     paths:
         - .
     excludePaths:
-        - vendor
+        - vendor (?)
         - testing
         - .github
     memoryLimit: 1G
