@@ -12,14 +12,21 @@ jobs:
 
       - name: Setup PHP Web Server
         run: |
-          # Jalankan server PHP sementara di background port 8000
           php -S localhost:8000 &
-          sleep 5 # Tunggu server hidup
+          sleep 3
 
       - name: Audit URL using Lighthouse
         uses: treosh/lighthouse-ci-action@v10
         with:
           urls: 'http://localhost:8000/index.php'
-          uploadArtifacts: true # Simpan report HTML sebagai artifact
-          temporaryPublicStorage: true # Upload report ke public server sementara untuk dilihat
-          budgetPath: .github/lighthouse-budget.json # (Pilihan) Set target skor minimum
+          uploadArtifacts: false # FIX: Kita matikan ini sebab ia bugged
+          temporaryPublicStorage: true
+          budgetPath: .github/lighthouse-budget.json
+
+      # FIX: Kita upload report secara manual guna action rasmi
+      - name: Upload Lighthouse Report
+        uses: actions/upload-artifact@v4
+        if: always() # Upload walaupun audit fail
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
