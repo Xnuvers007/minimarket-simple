@@ -1,6 +1,7 @@
 name: ⚡ PWA & Performance Audit
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
 
