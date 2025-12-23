@@ -1,0 +1,50 @@
+name: 🛡️ Code Quality & Security Gate
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # Job 1: Pastikan Syntax Valid di pelbagai versi PHP
+  matrix-compatibility:
+    name: 🧪 Test PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.4', '8.0', '8.1', '8.2']
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl, pdo, pdo_mysql
+          coverage: none
+
+      - name: Check Syntax Error
+        run: find . -name "*.php" -print0 | xargs -0 -n1 php -l
+
+  # Job 2: Analisis Kod Statik & Gaya Penulisan (Professional Standard)
+  static-analysis:
+    name: 🔍 Static Analysis (PHPStan & CS)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP & Tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: phpstan, phpcs
+          
+      - name: Run PHP CodeSniffer (PSR-12 Standard)
+        continue-on-error: true # Kita biar dia jalan walaupun fail, untuk report sahaja
+        run: phpcs --standard=PSR12 --extensions=php --ignore=*/vendor/*,*/testing/* .
+        
+      - name: Run PHPStan (Level 0 - Basic Checks)
+        # Level 0 = check basic error. Naikkan level (max 9) jika kod dah makin stabil.
+        run: phpstan analyse . --level=0 --memory-limit=1G --exclude-paths=*/vendor/*
