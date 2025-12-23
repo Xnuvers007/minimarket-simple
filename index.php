@@ -25,15 +25,15 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     $username = clean_input($_POST['username']);
     $password = $_POST['password'];
-    
+
     $stmt = $conn->prepare("SELECT id, username, password, full_name, role, status FROM users WHERE username = ? OR email = ?");
     $stmt->bind_param("ss", $username, $username);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
-        
+
         if ($user['status'] == 'inactive') {
             $error = "Akun Anda tidak aktif. Hubungi administrator.";
         } elseif (password_verify($password, $user['password'])) {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             $_SESSION['username'] = $user['username'];
             $_SESSION['full_name'] = $user['full_name'];
             $_SESSION['role'] = $user['role'];
-            
+
             switch ($user['role']) {
                 case 'admin':
                     redirect('admin/index.php');
@@ -68,18 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $full_name = clean_input($_POST['reg_fullname']);
     $phone = clean_input($_POST['reg_phone']);
     $password = password_hash($_POST['reg_password'], PASSWORD_DEFAULT);
-    
+
     // Check if username exists
     $check = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
     $check->bind_param("ss", $username, $email);
     $check->execute();
-    
+
     if ($check->get_result()->num_rows > 0) {
         $error = "Username atau email sudah terdaftar!";
     } else {
         $stmt = $conn->prepare("INSERT INTO users (username, email, full_name, phone, password, role) VALUES (?, ?, ?, ?, ?, 'customer')");
         $stmt->bind_param("sssss", $username, $email, $full_name, $phone, $password);
-        
+
         if ($stmt->execute()) {
             $success = "Registrasi berhasil! Silakan login.";
         } else {
@@ -302,13 +302,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                 <div class="tab" onclick="showTab('register')">Register</div>
             </div>
             
-            <?php if($error): ?>
+            <?php if ($error) : ?>
                 <div class="alert alert-error">
                     <i class="fas fa-exclamation-circle"></i> <?php echo $error; ?>
                 </div>
             <?php endif; ?>
             
-            <?php if($success): ?>
+            <?php if ($success) : ?>
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle"></i> <?php echo $success; ?>
                 </div>

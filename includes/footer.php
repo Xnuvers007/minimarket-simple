@@ -10,7 +10,7 @@
                     <h5>Link Cepat</h5>
                     <ul class="list-unstyled">
                         <li><a href="<?php echo BASE_URL; ?>" class="text-white-50 text-decoration-none">Home</a></li>
-                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'customer'): ?>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'customer') : ?>
                             <li><a href="<?php echo BASE_URL; ?>customer/shop.php" class="text-white-50 text-decoration-none">Shop</a></li>
                             <li><a href="<?php echo BASE_URL; ?>customer/cart.php" class="text-white-50 text-decoration-none">Keranjang</a></li>
                         <?php endif; ?>
@@ -40,7 +40,7 @@
     <!-- Custom JS -->
     <script src="<?php echo BASE_URL; ?>assets/js/main.js"></script>
     
-    <?php if (isset($include_chart) && $include_chart): ?>
+    <?php if (isset($include_chart) && $include_chart) : ?>
         <script src="<?php echo BASE_URL; ?>assets/js/chart.min.js"></script>
     <?php endif; ?>
 </body>

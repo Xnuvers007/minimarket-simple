@@ -258,13 +258,13 @@ require_once '../includes/admin_header.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while($trans = $recent_transactions->fetch_assoc()): ?>
+                    <?php while ($trans = $recent_transactions->fetch_assoc()) : ?>
                     <tr>
                         <td><strong><?php echo $trans['invoice_number']; ?></strong></td>
                         <td><?php echo date('d/m/Y H:i', strtotime($trans['transaction_date'])); ?></td>
                         <td><strong><?php echo formatRupiah($trans['grand_total']); ?></strong></td>
                         <td>
-                            <?php 
+                            <?php
                             $payment_methods = [
                                 'cod' => 'Cash on Delivery',
                                 'transfer' => 'Transfer Bank',
@@ -285,11 +285,11 @@ require_once '../includes/admin_header.php';
                             ?>
                         </td>
                         <td>
-                            <?php if($trans['status'] == 'completed'): ?>
+                            <?php if ($trans['status'] == 'completed') : ?>
                                 <span class="badge badge-success">Selesai</span>
-                            <?php elseif($trans['status'] == 'pending'): ?>
+                            <?php elseif ($trans['status'] == 'pending') : ?>
                                 <span class="badge badge-warning">Pending</span>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <span class="badge badge-danger">Batal</span>
                             <?php endif; ?>
                         </td>

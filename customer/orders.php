@@ -238,7 +238,7 @@ require_once '../includes/admin_header.php';
     </nav>
     
     <div class="container">
-        <?php if(isset($_GET['success'])): ?>
+        <?php if (isset($_GET['success'])) : ?>
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> Pesanan berhasil dibuat! Silakan lakukan pembayaran.
             </div>
@@ -249,8 +249,8 @@ require_once '../includes/admin_header.php';
             <p style="color: #7f8c8d; margin-top: 5px;">Riwayat dan status pesanan Anda</p>
         </div>
         
-        <?php if($orders->num_rows > 0): ?>
-            <?php while($order = $orders->fetch_assoc()): 
+        <?php if ($orders->num_rows > 0) : ?>
+            <?php while ($order = $orders->fetch_assoc()) :
                 $status_badges = [
                     'pending' => ['class' => 'badge-warning', 'text' => 'Menunggu Pembayaran'],
                     'processing' => ['class' => 'badge-info', 'text' => 'Diproses'],
@@ -258,12 +258,12 @@ require_once '../includes/admin_header.php';
                     'completed' => ['class' => 'badge-success', 'text' => 'Selesai'],
                     'cancelled' => ['class' => 'badge-danger', 'text' => 'Dibatalkan']
                 ];
-                
+
                 $payment_badges = [
                     'unpaid' => ['class' => 'badge-warning', 'text' => 'Belum Dibayar'],
                     'paid' => ['class' => 'badge-success', 'text' => 'Sudah Dibayar']
                 ];
-            ?>
+                ?>
             <div class="order-card">
                 <div class="order-header">
                     <div>
@@ -306,7 +306,7 @@ require_once '../includes/admin_header.php';
                 </div>
             </div>
             <?php endwhile; ?>
-        <?php else: ?>
+        <?php else : ?>
         <div class="empty-state">
             <i class="fas fa-box-open"></i>
             <h2>Belum Ada Pesanan</h2>

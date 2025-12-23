@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_product'])) {
     $unit = clean_input($_POST['unit']);
     $description = clean_input($_POST['description']);
     $status = $_POST['status'];
-    
+
     // Handle image upload
     $image_filename = $_POST['existing_image'] ?? '';
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
@@ -35,13 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_product'])) {
             $error = $upload_result['message'];
         }
     }
-    
+
     if (!isset($error)) {
         if ($product_id) {
             // Update
             $stmt = $conn->prepare("UPDATE products SET product_name=?, sku=?, barcode=?, category_id=?, supplier_id=?, price=?, cost_price=?, stock=?, min_stock=?, unit=?, description=?, status=?, image=? WHERE id=?");
             $stmt->bind_param("sssiiddiisssi", $product_name, $sku, $barcode, $category_id, $supplier_id, $price, $cost_price, $stock, $min_stock, $unit, $description, $status, $image_filename, $product_id);
-            
+
             if ($stmt->execute()) {
                 $message = "Produk berhasil diupdate!";
             } else {
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_product'])) {
             // Insert
             $stmt = $conn->prepare("INSERT INTO products (product_name, sku, barcode, category_id, supplier_id, price, cost_price, stock, min_stock, unit, description, status, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("sssiiddiissss", $product_name, $sku, $barcode, $category_id, $supplier_id, $price, $cost_price, $stock, $min_stock, $unit, $description, $status, $image_filename);
-            
+
             if ($stmt->execute()) {
                 $message = "Produk berhasil ditambahkan!";
             } else {
@@ -66,7 +66,7 @@ if (isset($_GET['delete'])) {
     $product_id = $_GET['delete'];
     $stmt = $conn->prepare("UPDATE products SET status='inactive' WHERE id=?");
     $stmt->bind_param("i", $product_id);
-    
+
     if ($stmt->execute()) {
         $message = "Produk berhasil dihapus!";
     } else {
@@ -438,13 +438,13 @@ require_once '../includes/admin_header.php';
                 </div>
             </div>
             
-            <?php if($message): ?>
+            <?php if ($message) : ?>
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle"></i> <?php echo $message; ?>
                 </div>
             <?php endif; ?>
             
-            <?php if($error): ?>
+            <?php if ($error) : ?>
                 <div class="alert alert-error">
                     <i class="fas fa-exclamation-circle"></i> <?php echo $error; ?>
                 </div>
@@ -478,12 +478,12 @@ require_once '../includes/admin_header.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while($product = $products->fetch_assoc()): ?>
+                            <?php while ($product = $products->fetch_assoc()) : ?>
                             <tr>
                                 <td>
-                                    <?php if (!empty($product['image'])): ?>
+                                    <?php if (!empty($product['image'])) : ?>
                                         <img src="<?php echo UPLOAD_URL . $product['image']; ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" alt="<?php echo $product['product_name']; ?>">
-                                    <?php else: ?>
+                                    <?php else : ?>
                                         <div style="width: 50px; height: 50px; background: #e0e0e0; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
                                             <i class="fas fa-image" style="color: #95a5a6;"></i>
                                         </div>
@@ -500,9 +500,9 @@ require_once '../includes/admin_header.php';
                                     </span>
                                 </td>
                                 <td>
-                                    <?php if($product['status'] == 'active'): ?>
+                                    <?php if ($product['status'] == 'active') : ?>
                                         <span class="badge badge-success">Aktif</span>
-                                    <?php else: ?>
+                                    <?php else : ?>
                                         <span class="badge badge-danger">Nonaktif</span>
                                     <?php endif; ?>
                                 </td>
@@ -555,10 +555,10 @@ require_once '../includes/admin_header.php';
                         <label>Kategori *</label>
                         <select name="category_id" required>
                             <option value="">Pilih Kategori</option>
-                            <?php 
+                            <?php
                             $categories->data_seek(0);
-                            while($cat = $categories->fetch_assoc()): 
-                            ?>
+                            while ($cat = $categories->fetch_assoc()) :
+                                ?>
                             <option value="<?php echo $cat['category_id']; ?>" <?php echo ($edit_product['category_id'] ?? '') == $cat['category_id'] ? 'selected' : ''; ?>>
                                 <?php echo $cat['category_name']; ?>
                             </option>
@@ -570,10 +570,10 @@ require_once '../includes/admin_header.php';
                         <label>Supplier *</label>
                         <select name="supplier_id" required>
                             <option value="">Pilih Supplier</option>
-                            <?php 
+                            <?php
                             $suppliers->data_seek(0);
-                            while($sup = $suppliers->fetch_assoc()): 
-                            ?>
+                            while ($sup = $suppliers->fetch_assoc()) :
+                                ?>
                             <option value="<?php echo $sup['supplier_id']; ?>" <?php echo ($edit_product['supplier_id'] ?? '') == $sup['supplier_id'] ? 'selected' : ''; ?>>
                                 <?php echo $sup['supplier_name']; ?>
                             </option>
@@ -618,7 +618,7 @@ require_once '../includes/admin_header.php';
                         <label>Gambar Produk</label>
                         <input type="file" name="product_image" accept="image/*" onchange="previewImage(event)">
                         <small style="color: #7f8c8d; display: block; margin-top: 5px;">Format: JPG, PNG, GIF. Maksimal 5MB</small>
-                        <?php if (!empty($edit_product['image'])): ?>
+                        <?php if (!empty($edit_product['image'])) : ?>
                         <div id="currentImage" style="margin-top: 10px;">
                             <img src="<?php echo UPLOAD_URL . $edit_product['image']; ?>" style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid #e0e0e0;">
                             <p style="margin-top: 5px; font-size: 12px; color: #7f8c8d;">Gambar saat ini</p>

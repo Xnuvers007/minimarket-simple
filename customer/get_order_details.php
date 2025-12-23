@@ -1,4 +1,5 @@
 <?php
+
 require_once '../config.php';
 checkRole(['customer', 'kasir', 'admin']);
 
@@ -24,7 +25,7 @@ if (!$order) {
 $details = $conn->query("SELECT od.*, p.product_name FROM order_details od JOIN products p ON od.product_id = p.id WHERE od.order_id=$order_id");
 
 $items = [];
-while($item = $details->fetch_assoc()) {
+while ($item = $details->fetch_assoc()) {
     $items[] = $item;
 }
 
@@ -34,4 +35,3 @@ echo json_encode([
     'items' => $items,
     'total' => $order['total_amount']
 ]);
-?>

@@ -9,14 +9,14 @@ $error = '';
 if (isset($_POST['confirm_payment'])) {
     $order_id = (int)$_POST['order_id'];
     $payment_method = clean_input($_POST['payment_method']);
-    
+
     // Get order details
     $order = $conn->query("SELECT * FROM orders WHERE id=$order_id")->fetch_assoc();
-    
+
     if ($order) {
         // Create invoice number
         $invoice_number = 'INV-' . date('YmdHis') . '-' . rand(100, 999);
-        
+
         // Insert into transactions table
         $kasir_id = $_SESSION['user_id'];
         $total_amount = $order['total_amount'];
@@ -25,26 +25,26 @@ if (isset($_POST['confirm_payment'])) {
         $grand_total = $order['total_amount'];
         $payment_amount = $order['total_amount'];
         $change_amount = 0;
-        
+
         $stmt = $conn->prepare("INSERT INTO transactions (invoice_number, kasir_id, total_amount, discount, tax, grand_total, payment_amount, change_amount, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed')");
         $stmt->bind_param("sidddddds", $invoice_number, $kasir_id, $total_amount, $discount, $tax, $grand_total, $payment_amount, $change_amount, $payment_method);
-        
+
         if ($stmt->execute()) {
             $transaction_id = $conn->insert_id;
-            
+
             // Get order items and insert into transaction_details
             $items = $conn->query("SELECT * FROM order_details WHERE order_id=$order_id");
-            while($item = $items->fetch_assoc()) {
+            while ($item = $items->fetch_assoc()) {
                 $stmt2 = $conn->prepare("INSERT INTO transaction_details (transaction_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
                 $stmt2->bind_param("iiidd", $transaction_id, $item['product_id'], $item['quantity'], $item['price'], $item['subtotal']);
                 $stmt2->execute();
             }
-            
+
             // Update order status
             $stmt3 = $conn->prepare("UPDATE orders SET status='completed', payment_status='paid', payment_method=? WHERE id=?");
             $stmt3->bind_param("si", $payment_method, $order_id);
             $stmt3->execute();
-            
+
             // Log activity
             logActivity('confirm_payment', "Konfirmasi pembayaran order #$order_id, buat transaksi $invoice_number");
             $message = "Pembayaran berhasil dikonfirmasi dan transaksi telah dibuat!";
@@ -60,17 +60,17 @@ if (isset($_POST['confirm_payment'])) {
 if (isset($_POST['cancel_order'])) {
     $order_id = (int)$_POST['order_id'];
     $reason = clean_input($_POST['cancel_reason']);
-    
+
     $stmt = $conn->prepare("UPDATE orders SET status='cancelled', notes=CONCAT(IFNULL(notes, ''), '\nDibatalkan: ', ?) WHERE id=?");
     $stmt->bind_param("si", $reason, $order_id);
-    
+
     if ($stmt->execute()) {
         // Restore stock
         $items = $conn->query("SELECT product_id, quantity FROM order_details WHERE order_id=$order_id");
-        while($item = $items->fetch_assoc()) {
+        while ($item = $items->fetch_assoc()) {
             $conn->query("UPDATE products SET stock = stock + {$item['quantity']} WHERE id = {$item['product_id']}");
         }
-        
+
         logActivity('cancel_order', "Batalkan order #$order_id: $reason");
         $message = "Order berhasil dibatalkan!";
     } else {
@@ -430,13 +430,13 @@ $orders = $conn->query("SELECT o.*, u.full_name, u.phone FROM orders o LEFT JOIN
             </div>
         </div>
 
-        <?php if($message): ?>
+        <?php if ($message) : ?>
         <div class="alert alert-success">
             <i class="fas fa-check-circle"></i> <?php echo $message; ?>
         </div>
         <?php endif; ?>
 
-        <?php if($error): ?>
+        <?php if ($error) : ?>
         <div class="alert alert-error">
             <i class="fas fa-exclamation-circle"></i> <?php echo $error; ?>
         </div>
@@ -467,8 +467,8 @@ $orders = $conn->query("SELECT o.*, u.full_name, u.phone FROM orders o LEFT JOIN
 
         <!-- Orders Grid -->
         <div class="orders-grid">
-            <?php if($orders->num_rows > 0): ?>
-                <?php while($order = $orders->fetch_assoc()): ?>
+            <?php if ($orders->num_rows > 0) : ?>
+                <?php while ($order = $orders->fetch_assoc()) : ?>
                 <div class="order-card">
                     <div class="order-header">
                         <div>
@@ -504,7 +504,7 @@ $orders = $conn->query("SELECT o.*, u.full_name, u.phone FROM orders o LEFT JOIN
                             </div>
                         </div>
                         
-                        <?php if($order['shipping_address']): ?>
+                        <?php if ($order['shipping_address']) : ?>
                         <div class="order-items">
                             <div class="item-header"><i class="fas fa-map-marker-alt"></i> Alamat Pengiriman</div>
                             <p style="margin: 0; color: #666;"><?php echo nl2br($order['shipping_address']); ?></p>
@@ -516,7 +516,7 @@ $orders = $conn->query("SELECT o.*, u.full_name, u.phone FROM orders o LEFT JOIN
                                 <i class="fas fa-eye"></i> Detail
                             </button>
                             
-                            <?php if($order['payment_status'] == 'unpaid' && $order['status'] != 'cancelled'): ?>
+                            <?php if ($order['payment_status'] == 'unpaid' && $order['status'] != 'cancelled') : ?>
                             <button class="btn btn-success" onclick="showConfirmModal(<?php echo $order['id']; ?>, '<?php echo $order['order_number']; ?>')">
                                 <i class="fas fa-check-circle"></i> Konfirmasi Bayar
                             </button>
@@ -529,7 +529,7 @@ $orders = $conn->query("SELECT o.*, u.full_name, u.phone FROM orders o LEFT JOIN
                     </div>
                 </div>
                 <?php endwhile; ?>
-            <?php else: ?>
+            <?php else : ?>
                 <div class="order-card">
                     <div class="order-body" style="text-align: center; padding: 40px;">
                         <i class="fas fa-inbox" style="font-size: 48px; color: #ddd; margin-bottom: 15px;"></i>

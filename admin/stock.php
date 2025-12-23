@@ -13,21 +13,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['adjust_stock'])) {
     $reference = clean_input($_POST['reference']);
     $notes = clean_input($_POST['notes']);
     $created_by = $_SESSION['user_id'];
-    
+
     $conn->begin_transaction();
-    
+
     try {
         // Insert stock history
         $stmt = $conn->prepare("INSERT INTO stock_history (product_id, quantity_change, type, reference, notes, created_by) VALUES (?, ?, ?, ?, ?, ?)");
         $qty_change = ($type == 'out') ? -$quantity : $quantity;
         $stmt->bind_param("iisssi", $product_id, $qty_change, $type, $reference, $notes, $created_by);
         $stmt->execute();
-        
+
         // Update product stock
         $stmt = $conn->prepare("UPDATE products SET stock = stock + ? WHERE id = ?");
         $stmt->bind_param("ii", $qty_change, $product_id);
         $stmt->execute();
-        
+
         $conn->commit();
         $message = "Stok berhasil diupdate!";
     } catch (Exception $e) {
@@ -240,15 +240,15 @@ require_once '../includes/admin_header.php';
                 </div>
             </div>
             
-            <?php if($message): ?>
+            <?php if ($message) : ?>
                 <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
             <?php endif; ?>
             
-            <?php if($error): ?>
+            <?php if ($error) : ?>
                 <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?php echo $error; ?></div>
             <?php endif; ?>
             
-            <?php if($low_stock_products->num_rows > 0): ?>
+            <?php if ($low_stock_products->num_rows > 0) : ?>
             <div class="stock-alert">
                 <h3 style="margin-bottom: 10px;"><i class="fas fa-exclamation-triangle"></i> Peringatan Stok Menipis!</h3>
                 <p>Ada <?php echo $low_stock_products->num_rows; ?> produk dengan stok di bawah minimum. Segera lakukan restock!</p>
@@ -274,18 +274,18 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
+                        <?php
                         $low_stock_products->data_seek(0);
-                        while($product = $low_stock_products->fetch_assoc()): 
-                        ?>
+                        while ($product = $low_stock_products->fetch_assoc()) :
+                            ?>
                         <tr>
                             <td><strong><?php echo $product['product_name']; ?></strong></td>
                             <td><span class="badge badge-danger"><?php echo $product['stock']; ?> <?php echo $product['unit']; ?></span></td>
                             <td><?php echo $product['min_stock']; ?> <?php echo $product['unit']; ?></td>
                             <td>
-                                <?php if($product['stock'] == 0): ?>
+                                <?php if ($product['stock'] == 0) : ?>
                                     <span class="badge badge-danger">Habis</span>
-                                <?php else: ?>
+                                <?php else : ?>
                                     <span class="badge badge-warning">Menipis</span>
                                 <?php endif; ?>
                             </td>
@@ -317,16 +317,16 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while($history = $stock_history->fetch_assoc()): ?>
+                        <?php while ($history = $stock_history->fetch_assoc()) : ?>
                         <tr>
                             <td><?php echo date('d/m/Y H:i', strtotime($history['created_at'])); ?></td>
                             <td><?php echo $history['product_name']; ?></td>
                             <td>
-                                <?php if($history['type'] == 'in'): ?>
+                                <?php if ($history['type'] == 'in') : ?>
                                     <span class="badge badge-success">Masuk</span>
-                                <?php elseif($history['type'] == 'out'): ?>
+                                <?php elseif ($history['type'] == 'out') : ?>
                                     <span class="badge badge-danger">Keluar</span>
-                                <?php else: ?>
+                                <?php else : ?>
                                     <span class="badge badge-info">Penyesuaian</span>
                                 <?php endif; ?>
                             </td>
@@ -357,10 +357,10 @@ require_once '../includes/admin_header.php';
                     <label>Produk *</label>
                     <select name="id" id="productSelect" required>
                         <option value="">Pilih Produk</option>
-                        <?php 
+                        <?php
                         $all_products->data_seek(0);
-                        while($prod = $all_products->fetch_assoc()): 
-                        ?>
+                        while ($prod = $all_products->fetch_assoc()) :
+                            ?>
                         <option value="<?php echo $prod['id']; ?>">
                             <?php echo $prod['product_name']; ?> (Stok: <?php echo $prod['stock']; ?>)
                         </option>

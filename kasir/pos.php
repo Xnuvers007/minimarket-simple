@@ -6,13 +6,13 @@ checkRole(['kasir', 'admin']);
 if (isset($_POST['add_to_cart'])) {
     $product_id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
-    
+
     // Get product info
     $stmt = $conn->prepare("SELECT * FROM products WHERE id = ? AND status = 'active'");
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
     $product = $stmt->get_result()->fetch_assoc();
-    
+
     if ($product && $product['stock'] >= $quantity) {
         $_SESSION['pos_cart'][$product_id] = [
             'name' => $product['product_name'],
@@ -40,57 +40,57 @@ if (isset($_POST['checkout'])) {
     $payment_method = $_POST['payment_method'];
     $payment_amount = floatval($_POST['payment_amount']);
     $discount = floatval($_POST['discount'] ?? 0);
-    
+
     if (empty($_SESSION['pos_cart'])) {
         echo json_encode(['success' => false, 'message' => 'Keranjang kosong']);
         exit;
     }
-    
+
     $total = 0;
     foreach ($_SESSION['pos_cart'] as $item) {
         $total += $item['price'] * $item['quantity'];
     }
-    
+
     $grand_total = $total - $discount;
     $change = $payment_amount - $grand_total;
-    
+
     if ($change < 0) {
         echo json_encode(['success' => false, 'message' => 'Pembayaran kurang']);
         exit;
     }
-    
+
     $conn->begin_transaction();
-    
+
     try {
         $invoice = generateInvoiceNumber();
         $kasir_id = $_SESSION['user_id'];
-        
+
         $stmt = $conn->prepare("INSERT INTO transactions (invoice_number, kasir_id, total_amount, discount, grand_total, payment_method, payment_amount, change_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("sidddsd d", $invoice, $kasir_id, $total, $discount, $grand_total, $payment_method, $payment_amount, $change);
         $stmt->execute();
-        
+
         $transaction_id = $conn->insert_id;
-        
+
         foreach ($_SESSION['pos_cart'] as $product_id => $item) {
             $subtotal = $item['price'] * $item['quantity'];
-            
+
             $stmt = $conn->prepare("INSERT INTO transaction_details (transaction_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("iiidd", $transaction_id, $product_id, $item['quantity'], $item['price'], $subtotal);
             $stmt->execute();
-            
+
             $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
             $stmt->bind_param("ii", $item['quantity'], $product_id);
             $stmt->execute();
-            
+
             $stmt = $conn->prepare("INSERT INTO stock_history (product_id, quantity_change, type, reference, created_by) VALUES (?, ?, 'out', ?, ?)");
             $qty = -$item['quantity'];
             $stmt->bind_param("iisi", $product_id, $qty, $invoice, $kasir_id);
             $stmt->execute();
         }
-        
+
         $conn->commit();
         unset($_SESSION['pos_cart']);
-        
+
         echo json_encode([
             'success' => true,
             'invoice' => $invoice,
@@ -478,7 +478,7 @@ $products = $conn->query("SELECT p.*, c.category_name FROM products p LEFT JOIN 
             </div>
             
             <div class="products-grid" id="productsGrid">
-                <?php while($product = $products->fetch_assoc()): ?>
+                <?php while ($product = $products->fetch_assoc()) : ?>
                 <div class="product-card" onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo addslashes($product['product_name']); ?>', <?php echo $product['price']; ?>, <?php echo $product['stock']; ?>)">
                     <div class="product-icon">
                         <i class="fas fa-box"></i>
@@ -498,18 +498,18 @@ $products = $conn->query("SELECT p.*, c.category_name FROM products p LEFT JOIN 
             </div>
             
             <div class="cart-items" id="cartItems">
-                <?php if(empty($_SESSION['pos_cart'])): ?>
+                <?php if (empty($_SESSION['pos_cart'])) : ?>
                 <div class="empty-cart">
                     <i class="fas fa-shopping-basket"></i>
                     <p>Keranjang masih kosong</p>
                 </div>
-                <?php else: ?>
-                    <?php 
+                <?php else : ?>
+                    <?php
                     $total = 0;
-                    foreach($_SESSION['pos_cart'] as $id => $item): 
+                    foreach ($_SESSION['pos_cart'] as $id => $item) :
                         $subtotal = $item['price'] * $item['quantity'];
                         $total += $subtotal;
-                    ?>
+                        ?>
                     <div class="cart-item" id="item-<?php echo $id; ?>">
                         <div class="item-info">
                             <div class="item-name"><?php echo $item['name']; ?></div>

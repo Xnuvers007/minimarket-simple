@@ -9,7 +9,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </div>
     
     <ul class="sidebar-menu">
-        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'admin') : ?>
             <!-- Admin Menu -->
             <li class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">
                 <a href="<?php echo BASE_URL; ?>admin/index.php">
@@ -52,7 +52,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
             
-        <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] == 'kasir'): ?>
+        <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] == 'kasir') : ?>
             <!-- Kasir Menu -->
             <li class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">
                 <a href="<?php echo BASE_URL; ?>kasir/index.php">
@@ -70,7 +70,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
             
-        <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] == 'customer'): ?>
+        <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] == 'customer') : ?>
             <!-- Customer Menu -->
             <li class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">
                 <a href="<?php echo BASE_URL; ?>customer/index.php">

@@ -6,13 +6,13 @@ checkRole(['customer']);
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_to_cart'])) {
     $product_id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
-    
+
     // Check if already in cart
     $check = $conn->prepare("SELECT * FROM cart WHERE user_id=? AND product_id=?");
     $check->bind_param("ii", $_SESSION['user_id'], $product_id);
     $check->execute();
     $result = $check->get_result();
-    
+
     if ($result->num_rows > 0) {
         // Update quantity
         $stmt = $conn->prepare("UPDATE cart SET quantity = quantity + ? WHERE user_id=? AND product_id=?");
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_to_cart'])) {
         $stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)");
         $stmt->bind_param("iii", $_SESSION['user_id'], $product_id, $quantity);
     }
-    
+
     $stmt->execute();
     header("Location: shop.php?added=1");
     exit;
@@ -333,7 +333,7 @@ require_once '../includes/admin_header.php';
                 </a>
                 <a href="cart.php" class="nav-link">
                     <i class="fas fa-shopping-cart"></i> Keranjang
-                    <?php if($cart_count > 0): ?>
+                    <?php if ($cart_count > 0) : ?>
                         <span class="cart-badge"><?php echo $cart_count; ?></span>
                     <?php endif; ?>
                 </a>
@@ -351,7 +351,7 @@ require_once '../includes/admin_header.php';
     </nav>
     
     <div class="container">
-        <?php if(isset($_GET['added'])): ?>
+        <?php if (isset($_GET['added'])) : ?>
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> Produk berhasil ditambahkan ke keranjang!
             </div>
@@ -374,7 +374,7 @@ require_once '../includes/admin_header.php';
                         <label for="filter-category">Kategori</label>
                         <select id="filter-category" name="category" autocomplete="off">
                             <option value="">Semua Kategori</option>
-                            <?php while($cat = $categories->fetch_assoc()): ?>
+                            <?php while ($cat = $categories->fetch_assoc()) : ?>
                             <option value="<?php echo $cat['id']; ?>" <?php echo $category_filter == $cat['id'] ? 'selected' : ''; ?>>
                                 <?php echo $cat['category_name']; ?>
                             </option>
@@ -389,9 +389,9 @@ require_once '../includes/admin_header.php';
             </form>
         </div>
         
-        <?php if($products->num_rows > 0): ?>
+        <?php if ($products->num_rows > 0) : ?>
         <div class="products-grid">
-            <?php while($product = $products->fetch_assoc()): ?>
+            <?php while ($product = $products->fetch_assoc()) : ?>
             <div class="product-card">
                 <div class="product-image">
                     <i class="fas fa-box"></i>
@@ -410,7 +410,7 @@ require_once '../includes/admin_header.php';
                         <i class="fas fa-cube"></i> Stok: <?php echo $product['stock']; ?> <?php echo $product['unit']; ?>
                     </div>
                     
-                    <?php if($product['stock'] > 0): ?>
+                    <?php if ($product['stock'] > 0) : ?>
                     <div class="product-actions">
                         <form method="POST">
                             <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
@@ -426,7 +426,7 @@ require_once '../includes/admin_header.php';
                             </button>
                         </form>
                     </div>
-                    <?php else: ?>
+                    <?php else : ?>
                     <button class="btn" style="width: 100%; background: #ccc; cursor: not-allowed;" disabled>
                         <i class="fas fa-times"></i> Stok Habis
                     </button>
@@ -435,7 +435,7 @@ require_once '../includes/admin_header.php';
             </div>
             <?php endwhile; ?>
         </div>
-        <?php else: ?>
+        <?php else : ?>
         <div class="empty-state">
             <i class="fas fa-search"></i>
             <h3>Produk tidak ditemukan</h3>

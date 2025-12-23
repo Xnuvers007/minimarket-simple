@@ -9,22 +9,22 @@ $message = '';
 if (isset($_POST['update_cart'])) {
     $cart_id = $_POST['cart_id'];
     $quantity = $_POST['quantity'];
-    
+
     $stmt = $conn->prepare("UPDATE cart SET quantity=? WHERE id=? AND user_id=?");
     $stmt->bind_param("iii", $quantity, $cart_id, $user_id);
     $stmt->execute();
-    
+
     $message = "Keranjang berhasil diupdate!";
 }
 
 // Handle Remove Item
 if (isset($_GET['remove'])) {
     $cart_id = $_GET['remove'];
-    
+
     $stmt = $conn->prepare("DELETE FROM cart WHERE cart_id=? AND user_id=?");
     $stmt->bind_param("ii", $cart_id, $user_id);
     $stmt->execute();
-    
+
     header("Location: cart.php?removed=1");
     exit;
 }
@@ -319,11 +319,11 @@ require_once '../includes/admin_header.php';
     </nav>
     
     <div class="container">
-        <?php if($message): ?>
+        <?php if ($message) : ?>
             <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
         <?php endif; ?>
         
-        <?php if(isset($_GET['removed'])): ?>
+        <?php if (isset($_GET['removed'])) : ?>
             <div class="alert alert-success"><i class="fas fa-check-circle"></i> Item berhasil dihapus dari keranjang!</div>
         <?php endif; ?>
         
@@ -332,13 +332,13 @@ require_once '../includes/admin_header.php';
             <p style="color: #7f8c8d; margin-top: 5px;">Review dan checkout pesanan Anda</p>
         </div>
         
-        <?php if($cart_items->num_rows > 0): ?>
+        <?php if ($cart_items->num_rows > 0) : ?>
         <div class="cart-container">
             <div class="cart-items">
-                <?php while($item = $cart_items->fetch_assoc()): 
+                <?php while ($item = $cart_items->fetch_assoc()) :
                     $subtotal = $item['price'] * $item['quantity'];
                     $total += $subtotal;
-                ?>
+                    ?>
                 <div class="cart-item">
                     <div class="item-image">
                         <i class="fas fa-box"></i>
@@ -396,7 +396,7 @@ require_once '../includes/admin_header.php';
                 </a>
             </div>
         </div>
-        <?php else: ?>
+        <?php else : ?>
         <div class="empty-cart">
             <i class="fas fa-shopping-cart"></i>
             <h2>Keranjang Anda Kosong</h2>

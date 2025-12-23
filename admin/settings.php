@@ -12,10 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_password'])) {
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
-    
+
     // Verify current password
     $user = $conn->query("SELECT password FROM users WHERE id=$user_id")->fetch_assoc();
-    
+
     if (!password_verify($current_password, $user['password'])) {
         $error = "Password saat ini salah!";
     } elseif ($new_password !== $confirm_password) {
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_password'])) {
         $hashed = password_hash($new_password, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("UPDATE users SET password=? WHERE id=?");
         $stmt->bind_param("si", $hashed, $user_id);
-        
+
         if ($stmt->execute()) {
             $message = "Password berhasil diubah!";
         } else {
@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
     $full_name = clean_input($_POST['full_name']);
     $email = clean_input($_POST['email']);
     $phone = clean_input($_POST['phone']);
-    
+
     $stmt = $conn->prepare("UPDATE users SET full_name=?, email=?, phone=? WHERE id=?");
     $stmt->bind_param("sssi", $full_name, $email, $phone, $user_id);
-    
+
     if ($stmt->execute()) {
         $_SESSION['full_name'] = $full_name;
         $message = "Profil berhasil diupdate!";
@@ -242,11 +242,11 @@ require_once '../includes/admin_header.php';
                 </div>
             </div>
             
-            <?php if($message): ?>
+            <?php if ($message) : ?>
                 <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
             <?php endif; ?>
             
-            <?php if($error): ?>
+            <?php if ($error) : ?>
                 <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?php echo $error; ?></div>
             <?php endif; ?>
             

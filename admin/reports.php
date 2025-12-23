@@ -6,26 +6,26 @@ checkRole(['admin']);
 if (isset($_POST['delete_transaction'])) {
     header('Content-Type: application/json');
     $transaction_id = intval($_POST['transaction_id']);
-    
+
     $conn->begin_transaction();
     try {
         // Get transaction details untuk restore stock
         $details = $conn->query("SELECT product_id, quantity FROM transaction_details WHERE transaction_id=$transaction_id");
-        
+
         // Restore stock
-        while($detail = $details->fetch_assoc()) {
+        while ($detail = $details->fetch_assoc()) {
             $conn->query("UPDATE products SET stock = stock + {$detail['quantity']} WHERE id = {$detail['product_id']}");
         }
-        
+
         // Delete transaction details
         $conn->query("DELETE FROM transaction_details WHERE transaction_id=$transaction_id");
-        
+
         // Delete stock history
         $conn->query("DELETE FROM stock_history WHERE reference IN (SELECT invoice_number FROM transactions WHERE id=$transaction_id)");
-        
+
         // Delete transaction
         $conn->query("DELETE FROM transactions WHERE id=$transaction_id");
-        
+
         $conn->commit();
         echo json_encode(['success' => true, 'message' => 'Transaksi berhasil dihapus']);
     } catch (Exception $e) {
@@ -305,7 +305,7 @@ require_once '../includes/admin_header.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while($prod = $top_products->fetch_assoc()): ?>
+                            <?php while ($prod = $top_products->fetch_assoc()) : ?>
                             <tr>
                                 <td><strong><?php echo $prod['product_name']; ?></strong></td>
                                 <td><?php echo number_format($prod['total_sold']); ?> unit</td>
@@ -327,7 +327,7 @@ require_once '../includes/admin_header.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while($cat = $sales_by_category->fetch_assoc()): ?>
+                            <?php while ($cat = $sales_by_category->fetch_assoc()) : ?>
                             <tr>
                                 <td><strong><?php echo $cat['category_name']; ?></strong></td>
                                 <td><?php echo number_format($cat['trans_count']); ?></td>
@@ -350,7 +350,7 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while($daily = $daily_sales->fetch_assoc()): ?>
+                        <?php while ($daily = $daily_sales->fetch_assoc()) : ?>
                         <tr>
                             <td><strong><?php echo date('d F Y', strtotime($daily['date'])); ?></strong></td>
                             <td><?php echo number_format($daily['trans_count']); ?> transaksi</td>
@@ -373,15 +373,15 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while($prod = $low_stock->fetch_assoc()): ?>
+                        <?php while ($prod = $low_stock->fetch_assoc()) : ?>
                         <tr>
                             <td><strong><?php echo $prod['product_name']; ?></strong></td>
                             <td><?php echo $prod['stock']; ?> <?php echo $prod['unit']; ?></td>
                             <td><?php echo $prod['min_stock']; ?> <?php echo $prod['unit']; ?></td>
                             <td>
-                                <?php if($prod['stock'] == 0): ?>
+                                <?php if ($prod['stock'] == 0) : ?>
                                     <strong style="color: #e74c3c;">Habis</strong>
-                                <?php else: ?>
+                                <?php else : ?>
                                     <strong style="color: #f39c12;">Menipis</strong>
                                 <?php endif; ?>
                             </td>
@@ -405,19 +405,19 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
+                        <?php
                         $transactions = $conn->query("SELECT t.*, u.full_name as kasir_name FROM transactions t LEFT JOIN users u ON t.kasir_id = u.id WHERE DATE(t.transaction_date) BETWEEN '$date_from' AND '$date_to' ORDER BY t.transaction_date DESC");
-                        while($trans = $transactions->fetch_assoc()): 
-                        ?>
+                        while ($trans = $transactions->fetch_assoc()) :
+                            ?>
                         <tr>
                             <td><strong><?php echo $trans['invoice_number']; ?></strong></td>
                             <td><?php echo date('d/m/Y H:i', strtotime($trans['transaction_date'])); ?></td>
                             <td><?php echo $trans['kasir_name'] ?? 'N/A'; ?></td>
                             <td><strong><?php echo formatRupiah($trans['grand_total']); ?></strong></td>
                             <td>
-                                <?php if($trans['status'] == 'completed'): ?>
+                                <?php if ($trans['status'] == 'completed') : ?>
                                     <strong style="color: #27ae60;">Selesai</strong>
-                                <?php else: ?>
+                                <?php else : ?>
                                     <strong style="color: #95a5a6;">Pending</strong>
                                 <?php endif; ?>
                             </td>

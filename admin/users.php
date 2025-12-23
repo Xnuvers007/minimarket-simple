@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_user'])) {
     $role = $_POST['role'];
     $status = $_POST['status'];
     $address = clean_input($_POST['address']);
-    
+
     if ($user_id) {
         // Update
         $stmt = $conn->prepare("UPDATE users SET username=?, email=?, full_name=?, phone=?, role=?, status=?, address=? WHERE id=?");
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_user'])) {
         $check = $conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
         $check->bind_param("ss", $username, $email);
         $check->execute();
-        
+
         if ($check->get_result()->num_rows > 0) {
             $error = "Username atau email sudah terdaftar!";
         } else {
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_user'])) {
             $message = "User berhasil ditambahkan! Password default: password";
         }
     }
-    
+
     if (empty($error) && isset($stmt)) {
         if (!$stmt->execute()) {
             $error = "Gagal menyimpan user!";
@@ -49,14 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_user'])) {
 // Handle Delete
 if (isset($_GET['delete'])) {
     $user_id = $_GET['delete'];
-    
+
     // Don't allow deleting yourself
     if ($user_id == $_SESSION['user_id']) {
         $error = "Tidak dapat menghapus akun sendiri!";
     } else {
         $stmt = $conn->prepare("DELETE FROM users WHERE id=?");
         $stmt->bind_param("i", $user_id);
-        
+
         if ($stmt->execute()) {
             $message = "User berhasil dihapus!";
         } else {
@@ -268,11 +268,11 @@ require_once '../includes/admin_header.php';
                 </div>
             </div>
             
-            <?php if($message): ?>
+            <?php if ($message) : ?>
                 <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
             <?php endif; ?>
             
-            <?php if($error): ?>
+            <?php if ($error) : ?>
                 <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?php echo $error; ?></div>
             <?php endif; ?>
             
@@ -297,13 +297,13 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while($user = $users->fetch_assoc()): ?>
+                        <?php while ($user = $users->fetch_assoc()) : ?>
                         <tr>
                             <td><strong><?php echo $user['username']; ?></strong></td>
                             <td><?php echo $user['full_name']; ?></td>
                             <td><?php echo $user['email']; ?></td>
                             <td>
-                                <?php 
+                                <?php
                                 $role_badges = [
                                     'admin' => 'badge-danger',
                                     'kasir' => 'badge-info',
@@ -315,9 +315,9 @@ require_once '../includes/admin_header.php';
                                 </span>
                             </td>
                             <td>
-                                <?php if($user['status'] == 'active'): ?>
+                                <?php if ($user['status'] == 'active') : ?>
                                     <span class="badge badge-success">Aktif</span>
-                                <?php else: ?>
+                                <?php else : ?>
                                     <span class="badge badge-danger">Nonaktif</span>
                                 <?php endif; ?>
                             </td>
@@ -326,7 +326,7 @@ require_once '../includes/admin_header.php';
                                 <a href="?edit=<?php echo $user['id']; ?>" class="btn btn-warning" style="padding: 5px 10px; font-size: 12px;">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <?php if($user['id'] != $_SESSION['user_id']): ?>
+                                <?php if ($user['id'] != $_SESSION['user_id']) : ?>
                                 <a href="?delete=<?php echo $user['id']; ?>" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="return confirm('Yakin ingin menghapus?')">
                                     <i class="fas fa-trash"></i>
                                 </a>
@@ -392,7 +392,7 @@ require_once '../includes/admin_header.php';
                     <textarea name="address"><?php echo $edit_user['address'] ?? ''; ?></textarea>
                 </div>
                 
-                <?php if(!$edit_user): ?>
+                <?php if (!$edit_user) : ?>
                 <p style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px;">
                     <i class="fas fa-info-circle"></i> Password default: <strong>password</strong>
                 </p>

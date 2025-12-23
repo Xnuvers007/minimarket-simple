@@ -4,13 +4,14 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Helper function untuk get root URL dari subfolder
-function getBaseUrl() {
+function getBaseUrl()
+{
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
     $host = $_SERVER['HTTP_HOST'];
-    
+
     // Detect root folder (sera)
     $script_path = dirname($_SERVER['SCRIPT_NAME']);
-    
+
     // Remove subfolder (admin, kasir, customer)
     if (strpos($script_path, '/admin') !== false) {
         $script_path = str_replace('/admin', '', $script_path);
@@ -19,7 +20,7 @@ function getBaseUrl() {
     } elseif (strpos($script_path, '/customer') !== false) {
         $script_path = str_replace('/customer', '', $script_path);
     }
-    
+
     $base_url = $protocol . "://" . $host . $script_path;
     return rtrim($base_url, '/') . '/';
 }
@@ -59,6 +60,6 @@ $base_url = getBaseUrl();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     
     <!-- Chart.js (if needed) -->
-    <?php if (isset($use_charts) && $use_charts): ?>
+    <?php if (isset($use_charts) && $use_charts) : ?>
     <script src="<?php echo $base_url; ?>assets/js/chart.js"></script>
     <?php endif; ?>

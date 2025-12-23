@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_category'])) {
     $category_name = clean_input($_POST['category_name']);
     $description = clean_input($_POST['description']);
     $icon = clean_input($_POST['icon']);
-    
+
     if ($category_id) {
         $stmt = $conn->prepare("UPDATE categories SET category_name=?, description=?, icon=? WHERE id=?");
         $stmt->bind_param("sssi", $category_name, $description, $icon, $category_id);
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_category'])) {
         $stmt->bind_param("sss", $category_name, $description, $icon);
         $message = "Kategori berhasil ditambahkan!";
     }
-    
+
     if (!$stmt->execute()) {
         $error = "Gagal menyimpan kategori!";
         $message = '';
@@ -33,7 +33,7 @@ if (isset($_GET['delete'])) {
     $category_id = $_GET['delete'];
     $stmt = $conn->prepare("DELETE FROM categories WHERE id=?");
     $stmt->bind_param("i", $category_id);
-    
+
     if ($stmt->execute()) {
         $message = "Kategori berhasil dihapus!";
     } else {
@@ -298,11 +298,11 @@ require_once '../includes/admin_header.php';
                 </div>
             </div>
             
-            <?php if($message): ?>
+            <?php if ($message) : ?>
                 <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
             <?php endif; ?>
             
-            <?php if($error): ?>
+            <?php if ($error) : ?>
                 <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?php echo $error; ?></div>
             <?php endif; ?>
             
@@ -315,7 +315,7 @@ require_once '../includes/admin_header.php';
                 </div>
                 
                 <div class="categories-grid">
-                    <?php while($cat = $categories->fetch_assoc()): ?>
+                    <?php while ($cat = $categories->fetch_assoc()) : ?>
                     <div class="category-card">
                         <div class="category-icon">
                             <i class="fas <?php echo $cat['icon'] ?: 'fa-tag'; ?>"></i>
@@ -362,10 +362,10 @@ require_once '../includes/admin_header.php';
                     <label>Pilih Icon</label>
                     <input type="hidden" name="icon" id="selectedIcon" value="<?php echo $edit_category['icon'] ?? 'fa-tag'; ?>">
                     <div class="icon-picker">
-                        <?php 
+                        <?php
                         $icons = ['fa-utensils', 'fa-glass-water', 'fa-wheat-awn', 'fa-soap', 'fa-plug', 'fa-shirt', 'fa-baby', 'fa-pills', 'fa-bone', 'fa-book', 'fa-futbol', 'fa-hammer', 'fa-paint-roller', 'fa-couch', 'fa-lightbulb', 'fa-mobile'];
-                        foreach($icons as $icon): 
-                        ?>
+                        foreach ($icons as $icon) :
+                            ?>
                         <div class="icon-option <?php echo ($edit_category['icon'] ?? 'fa-tag') == $icon ? 'selected' : ''; ?>" onclick="selectIcon('<?php echo $icon; ?>')">
                             <i class="fas <?php echo $icon; ?>"></i>
                         </div>

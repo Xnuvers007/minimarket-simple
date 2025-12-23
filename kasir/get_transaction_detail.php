@@ -1,4 +1,5 @@
 <?php
+
 require_once '../config.php';
 checkRole(['kasir', 'admin']);
 
@@ -18,7 +19,7 @@ if (!$trans) {
 $details = $conn->query("SELECT td.*, p.product_name FROM transaction_details td JOIN products p ON td.product_id = p.id WHERE td.transaction_id=$transaction_id");
 
 $items = [];
-while($item = $details->fetch_assoc()) {
+while ($item = $details->fetch_assoc()) {
     $items[] = $item;
 }
 
@@ -26,4 +27,3 @@ echo json_encode([
     'items' => $items,
     'grand_total' => $trans['grand_total']
 ]);
-?>

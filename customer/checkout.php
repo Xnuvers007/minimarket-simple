@@ -14,7 +14,7 @@ if ($cart_items->num_rows == 0) {
 
 $total = 0;
 $items = [];
-while($item = $cart_items->fetch_assoc()) {
+while ($item = $cart_items->fetch_assoc()) {
     $subtotal = $item['price'] * $item['quantity'];
     $total += $subtotal;
     $items[] = $item;
@@ -27,49 +27,48 @@ $user_info = $conn->query("SELECT * FROM users WHERE id=$user_id")->fetch_assoc(
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['place_order'])) {
     $shipping_address = clean_input($_POST['shipping_address']);
     $notes = clean_input($_POST['notes']);
-    
+
     $conn->begin_transaction();
-    
+
     try {
         // Create order
         $order_number = generateOrderNumber();
         $stmt = $conn->prepare("INSERT INTO orders (order_number, user_id, total_amount, shipping_address, notes, status, payment_status) VALUES (?, ?, ?, ?, ?, 'pending', 'unpaid')");
         $stmt->bind_param("sidss", $order_number, $user_id, $total, $shipping_address, $notes);
         $stmt->execute();
-        
+
         $order_id = $conn->insert_id;
-        
+
         // Add order details and update stock
         foreach ($items as $item) {
             $subtotal = $item['price'] * $item['quantity'];
-            
+
             // Insert order detail
             $stmt = $conn->prepare("INSERT INTO order_details (order_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("iiidd", $order_id, $item['product_id'], $item['quantity'], $item['price'], $subtotal);
             $stmt->execute();
-            
+
             // Update stock
             $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
             $stmt->bind_param("ii", $item['quantity'], $item['product_id']);
             $stmt->execute();
-            
+
             // Add stock history
             $stmt = $conn->prepare("INSERT INTO stock_history (product_id, quantity_change, type, reference, created_by) VALUES (?, ?, 'out', ?, ?)");
             $qty_change = -$item['quantity'];
             $stmt->bind_param("iisi", $item['product_id'], $qty_change, $order_number, $user_id);
             $stmt->execute();
         }
-        
+
         // Clear cart
         $stmt = $conn->prepare("DELETE FROM cart WHERE user_id=?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        
+
         $conn->commit();
-        
+
         header("Location: orders.php?success=1");
         exit;
-        
     } catch (Exception $e) {
         $conn->rollback();
         $error = "Gagal memproses pesanan: " . $e->getMessage();
@@ -329,7 +328,7 @@ require_once '../includes/admin_header.php';
             </div>
         </div>
         
-        <?php if(isset($error)): ?>
+        <?php if (isset($error)) : ?>
             <div class="alert alert-error">
                 <i class="fas fa-exclamation-circle"></i> <?php echo $error; ?>
             </div>
@@ -374,9 +373,9 @@ require_once '../includes/admin_header.php';
                         <h2 class="card-title"><i class="fas fa-receipt"></i> Ringkasan Pesanan</h2>
                         
                         <div style="max-height: 400px; overflow-y: auto;">
-                            <?php foreach($items as $item): 
+                            <?php foreach ($items as $item) :
                                 $subtotal = $item['price'] * $item['quantity'];
-                            ?>
+                                ?>
                             <div class="order-item">
                                 <div class="item-info">
                                     <div class="item-name"><?php echo $item['product_name']; ?></div>

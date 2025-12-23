@@ -228,7 +228,7 @@ $details = $conn->query("SELECT td.*, p.product_name FROM transaction_details td
         
         <!-- Items -->
         <div class="items">
-            <?php while($item = $details->fetch_assoc()): ?>
+            <?php while ($item = $details->fetch_assoc()) : ?>
             <div class="item">
                 <div class="item-name"><?php echo $item['product_name']; ?></div>
                 <div class="item-details">
@@ -246,14 +246,14 @@ $details = $conn->query("SELECT td.*, p.product_name FROM transaction_details td
                 <span><?php echo formatRupiah($transaction['subtotal']); ?></span>
             </div>
             
-            <?php if($transaction['discount'] > 0): ?>
+            <?php if ($transaction['discount'] > 0) : ?>
             <div class="total-row">
                 <span>Diskon</span>
                 <span>-<?php echo formatRupiah($transaction['discount']); ?></span>
             </div>
             <?php endif; ?>
             
-            <?php if($transaction['tax'] > 0): ?>
+            <?php if ($transaction['tax'] > 0) : ?>
             <div class="total-row">
                 <span>Pajak</span>
                 <span><?php echo formatRupiah($transaction['tax']); ?></span>

@@ -6,26 +6,26 @@ checkRole(['kasir', 'admin']);
 if (isset($_POST['delete_transaction'])) {
     header('Content-Type: application/json');
     $transaction_id = intval($_POST['transaction_id']);
-    
+
     $conn->begin_transaction();
     try {
         // Get transaction details untuk restore stock
         $details = $conn->query("SELECT product_id, quantity FROM transaction_details WHERE transaction_id=$transaction_id");
-        
+
         // Restore stock
-        while($detail = $details->fetch_assoc()) {
+        while ($detail = $details->fetch_assoc()) {
             $conn->query("UPDATE products SET stock = stock + {$detail['quantity']} WHERE id = {$detail['product_id']}");
         }
-        
+
         // Delete transaction details
         $conn->query("DELETE FROM transaction_details WHERE transaction_id=$transaction_id");
-        
+
         // Delete stock history
         $conn->query("DELETE FROM stock_history WHERE reference IN (SELECT invoice_number FROM transactions WHERE id=$transaction_id)");
-        
+
         // Delete transaction
         $conn->query("DELETE FROM transactions WHERE id=$transaction_id");
-        
+
         $conn->commit();
         echo json_encode(['success' => true, 'message' => 'Transaksi berhasil dihapus']);
     } catch (Exception $e) {
@@ -314,7 +314,7 @@ require_once '../includes/admin_header.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while($trans = $transactions->fetch_assoc()): ?>
+                    <?php while ($trans = $transactions->fetch_assoc()) : ?>
                     <tr>
                         <td><strong><?php echo $trans['invoice_number']; ?></strong></td>
                         <td><?php echo date('d/m/Y H:i', strtotime($trans['transaction_date'])); ?></td>
@@ -322,7 +322,7 @@ require_once '../includes/admin_header.php';
                         <td><?php echo formatRupiah($trans['discount']); ?></td>
                         <td><strong><?php echo formatRupiah($trans['grand_total']); ?></strong></td>
                         <td>
-                            <?php 
+                            <?php
                             $payment_methods = [
                                 'cod' => 'Cash on Delivery',
                                 'transfer' => 'Transfer Bank',
@@ -344,11 +344,11 @@ require_once '../includes/admin_header.php';
                         </td>
                         <td><?php echo formatRupiah($trans['change_amount']); ?></td>
                         <td>
-                            <?php if($trans['status'] == 'completed'): ?>
+                            <?php if ($trans['status'] == 'completed') : ?>
                                 <span class="badge badge-success">Selesai</span>
-                            <?php elseif($trans['status'] == 'pending'): ?>
+                            <?php elseif ($trans['status'] == 'pending') : ?>
                                 <span class="badge badge-warning">Pending</span>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <span class="badge badge-danger">Batal</span>
                             <?php endif; ?>
                         </td>

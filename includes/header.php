@@ -57,7 +57,7 @@ require_once __DIR__ . '/functions.php';
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if (isset($_SESSION['user_id'])) : ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user"></i> <?php echo htmlspecialchars($_SESSION['username']); ?>
@@ -66,11 +66,11 @@ require_once __DIR__ . '/functions.php';
                                 <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>customer/profile.php">
                                     <i class="fas fa-user-edit"></i> Profile
                                 </a></li>
-                                <?php if ($_SESSION['role'] == 'admin'): ?>
+                                <?php if ($_SESSION['role'] == 'admin') : ?>
                                     <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>admin/">
                                         <i class="fas fa-cog"></i> Admin Panel
                                     </a></li>
-                                <?php elseif ($_SESSION['role'] == 'kasir'): ?>
+                                <?php elseif ($_SESSION['role'] == 'kasir') : ?>
                                     <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>kasir/">
                                         <i class="fas fa-cash-register"></i> Kasir Panel
                                     </a></li>
@@ -81,7 +81,7 @@ require_once __DIR__ . '/functions.php';
                                 </a></li>
                             </ul>
                         </li>
-                    <?php else: ?>
+                    <?php else : ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo BASE_URL; ?>index.php">
                                 <i class="fas fa-sign-in-alt"></i> Login

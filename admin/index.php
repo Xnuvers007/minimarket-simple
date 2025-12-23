@@ -400,18 +400,18 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while($row = $recent_transactions->fetch_assoc()): ?>
+                        <?php while ($row = $recent_transactions->fetch_assoc()) : ?>
                         <tr>
                             <td><strong><?php echo $row['invoice_number']; ?></strong></td>
                             <td><?php echo date('d/m/Y H:i', strtotime($row['transaction_date'])); ?></td>
                             <td><?php echo $row['full_name'] ?? 'N/A'; ?></td>
                             <td><strong><?php echo formatRupiah($row['grand_total']); ?></strong></td>
                             <td>
-                                <?php if($row['status'] == 'completed'): ?>
+                                <?php if ($row['status'] == 'completed') : ?>
                                     <span class="badge badge-success">Selesai</span>
-                                <?php elseif($row['status'] == 'pending'): ?>
+                                <?php elseif ($row['status'] == 'pending') : ?>
                                     <span class="badge badge-warning">Pending</span>
-                                <?php else: ?>
+                                <?php else : ?>
                                     <span class="badge badge-danger">Batal</span>
                                 <?php endif; ?>
                             </td>
@@ -436,7 +436,7 @@ require_once '../includes/admin_header.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while($row = $top_products->fetch_assoc()): ?>
+                        <?php while ($row = $top_products->fetch_assoc()) : ?>
                         <tr>
                             <td><strong><?php echo $row['product_name']; ?></strong></td>
                             <td><?php echo number_format($row['total_sold']); ?> unit</td>

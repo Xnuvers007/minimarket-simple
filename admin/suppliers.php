@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_supplier'])) {
     $phone = clean_input($_POST['phone']);
     $email = clean_input($_POST['email']);
     $address = clean_input($_POST['address']);
-    
+
     if ($supplier_id) {
         $stmt = $conn->prepare("UPDATE suppliers SET supplier_name=?, contact_person=?, phone=?, email=?, address=? WHERE id=?");
         $stmt->bind_param("sssssi", $supplier_name, $contact_person, $phone, $email, $address, $supplier_id);
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_supplier'])) {
         $stmt->bind_param("sssss", $supplier_name, $contact_person, $phone, $email, $address);
         $message = "Supplier berhasil ditambahkan!";
     }
-    
+
     if (!$stmt->execute()) {
         $error = "Gagal menyimpan supplier!";
         $message = '';
@@ -35,7 +35,7 @@ if (isset($_GET['delete'])) {
     $supplier_id = $_GET['delete'];
     $stmt = $conn->prepare("DELETE FROM suppliers WHERE id=?");
     $stmt->bind_param("i", $supplier_id);
-    
+
     if ($stmt->execute()) {
         $message = "Supplier berhasil dihapus!";
     } else {
@@ -276,11 +276,11 @@ require_once '../includes/admin_header.php';
                 </div>
             </div>
             
-            <?php if($message): ?>
+            <?php if ($message) : ?>
                 <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
             <?php endif; ?>
             
-            <?php if($error): ?>
+            <?php if ($error) : ?>
                 <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?php echo $error; ?></div>
             <?php endif; ?>
             
@@ -292,7 +292,7 @@ require_once '../includes/admin_header.php';
                     </button>
                 </div>
                 
-                <?php while($sup = $suppliers->fetch_assoc()): ?>
+                <?php while ($sup = $suppliers->fetch_assoc()) : ?>
                 <div class="supplier-card">
                     <div class="supplier-header">
                         <div>

@@ -309,7 +309,7 @@ require_once '../includes/admin_header.php';
                 </a>
             </div>
             
-            <?php if($recent_orders->num_rows > 0): ?>
+            <?php if ($recent_orders->num_rows > 0) : ?>
             <table>
                 <thead>
                     <tr>
@@ -321,13 +321,13 @@ require_once '../includes/admin_header.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while($order = $recent_orders->fetch_assoc()): ?>
+                    <?php while ($order = $recent_orders->fetch_assoc()) : ?>
                     <tr>
                         <td><strong><?php echo $order['order_number']; ?></strong></td>
                         <td><?php echo date('d/m/Y H:i', strtotime($order['order_date'])); ?></td>
                         <td><strong><?php echo formatRupiah($order['total_amount']); ?></strong></td>
                         <td>
-                            <?php 
+                            <?php
                             $status_badges = [
                                 'pending' => 'badge-warning',
                                 'processing' => 'badge-info',
@@ -348,9 +348,9 @@ require_once '../includes/admin_header.php';
                             </span>
                         </td>
                         <td>
-                            <?php if($order['payment_status'] == 'paid'): ?>
+                            <?php if ($order['payment_status'] == 'paid') : ?>
                                 <span class="badge badge-success">Lunas</span>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <span class="badge badge-warning">Belum Bayar</span>
                             <?php endif; ?>
                         </td>
@@ -358,7 +358,7 @@ require_once '../includes/admin_header.php';
                     <?php endwhile; ?>
                 </tbody>
             </table>
-            <?php else: ?>
+            <?php else : ?>
             <div class="empty-state">
                 <i class="fas fa-inbox"></i>
                 <h3>Belum ada pesanan</h3>
