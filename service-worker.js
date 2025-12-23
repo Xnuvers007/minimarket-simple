@@ -79,7 +79,7 @@ self.addEventListener('fetch', (event) => {
           
           // If not in cache, return offline page
           if (event.request.mode === 'navigate') {
-            return caches.match('./offline.html');
+            return caches.match('/sera/offline.html');
           }
         });
       })
@@ -103,11 +103,11 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'Minimarket Notification';
   const options = {
     body: data.body || 'You have a new notification',
-    icon: './assets/images/icon-192x192.png',
-    badge: './assets/images/icon-72x72.png',
+    icon: '/sera/assets/images/icon-192x192.png',
+    badge: '/sera/assets/images/icon-72x72.png',
     vibrate: [100, 50, 100],
     data: {
-      url: data.url || './'
+      url: data.url || '/sera/'
     }
   };
   
@@ -137,7 +137,7 @@ async function syncTransactions() {
     
     // Send each pending transaction to server
     for (const transaction of pendingTx) {
-      await fetch('./api/sync-transaction.php', {
+      await fetch('/sera/api/sync-transaction.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
