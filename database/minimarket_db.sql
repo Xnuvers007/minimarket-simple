@@ -25,6 +25,7 @@ DELIMITER $$
 --
 -- Prosedur
 --
+<<<<<<< HEAD
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_stock_transaction` (IN `p_product_id` INT, IN `p_quantity` INT, IN `p_reference` VARCHAR(100), IN `p_user_id` INT)   BEGIN
     DECLARE v_stock_before INT;
     DECLARE v_stock_after INT;
@@ -41,6 +42,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_stock_transaction` (IN `p
     -- Insert to history
     INSERT INTO stock_history (product_id, quantity_before, quantity_change, quantity_after, type, reference, created_by)
     VALUES (p_product_id, v_stock_before, -p_quantity, v_stock_after, 'sale', p_reference, p_user_id);
+=======
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_stock_transaction` (IN `p_product_id` INT, IN `p_quantity` INT, IN `p_reference` VARCHAR(100), IN `p_user_id` INT)   BEGIN
+    DECLARE v_stock_before INT;
+    DECLARE v_stock_after INT;
+    
+    -- Get stock before
+    SELECT stock INTO v_stock_before FROM products WHERE id = p_product_id;
+    
+    -- Update stock
+    UPDATE products SET stock = stock - p_quantity WHERE id = p_product_id;
+    
+    -- Get stock after
+    SELECT stock INTO v_stock_after FROM products WHERE id = p_product_id;
+    
+    -- Insert to history
+    INSERT INTO stock_history (product_id, quantity_before, quantity_change, quantity_after, type, reference, created_by)
+    VALUES (p_product_id, v_stock_before, -p_quantity, v_stock_after, 'sale', p_reference, p_user_id);
+>>>>>>> 882da412c224f7c20dfb67829049d92fbad8991f
 END$$
 
 DELIMITER ;
@@ -270,6 +289,7 @@ INSERT INTO `products` (`id`, `category_id`, `supplier_id`, `product_name`, `sku
 -- Trigger `products`
 --
 DELIMITER $$
+<<<<<<< HEAD
 CREATE TRIGGER `tr_product_stock_update` AFTER UPDATE ON `products` FOR EACH ROW BEGIN
     IF OLD.stock != NEW.stock THEN
         INSERT INTO activity_logs (user_id, activity, description)
@@ -279,6 +299,17 @@ CREATE TRIGGER `tr_product_stock_update` AFTER UPDATE ON `products` FOR EACH ROW
             CONCAT('Product: ', NEW.product_name, ' - Stock changed from ', OLD.stock, ' to ', NEW.stock)
         );
     END IF;
+=======
+CREATE TRIGGER `tr_product_stock_update` AFTER UPDATE ON `products` FOR EACH ROW BEGIN
+    IF OLD.stock != NEW.stock THEN
+        INSERT INTO activity_logs (user_id, activity, description)
+        VALUES (
+            NULL,
+            'Stock Update',
+            CONCAT('Product: ', NEW.product_name, ' - Stock changed from ', OLD.stock, ' to ', NEW.stock)
+        );
+    END IF;
+>>>>>>> 882da412c224f7c20dfb67829049d92fbad8991f
 END
 $$
 DELIMITER ;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1034,3 +1035,1041 @@ define('DB_NAME', 'minimarket_db');</pre>
     </div>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi Lengkap - Sistem Minimarket Sejahtera</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .toc h2 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            padding: 5px 0;
+        }
+        
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .section h3 {
+            color: #764ba2;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .section h4 {
+            color: #555;
+            font-size: 16px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .error-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #f8f8f2;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+        
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .badge-info {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-warning {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .badge-success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .badge-danger {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .file-structure {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .breadcrumb {
+            background: #f8f9fa;
+            padding: 10px 0;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            margin-top: 50px;
+            color: #666;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>📚 Dokumentasi Lengkap</h1>
+            <p>Sistem Informasi Minimarket Sejahtera</p>
+            <p style="margin-top: 10px; font-size: 14px;">Versi 2.0 | Update: 22 Desember 2025</p>
+        </div>
+        
+        <!-- CONTENT -->
+        <div class="content">
+            
+            <!-- TABLE OF CONTENTS -->
+            <div class="toc">
+                <h2>📑 Daftar Isi</h2>
+                <ul>
+                    <li><a href="#intro">Pendahuluan</a></li>
+                    <li><a href="#fitur">Fitur Utama</a></li>
+                    <li><a href="#struktur">Struktur File</a></li>
+                    <li><a href="#instalasi">Panduan Instalasi</a></li>
+                    <li><a href="#cara-login">Cara Login</a></li>
+                    <li><a href="#admin">Panel Admin</a></li>
+                    <li><a href="#kasir">Panel Kasir/POS</a></li>
+                    <li><a href="#customer">Panel Customer</a></li>
+                    <li><a href="#database">Struktur Database</a></li>
+                    <li><a href="#tips">Tips & Trik</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                </ul>
+            </div>
+            
+            <!-- SECTION 1: PENDAHULUAN -->
+            <div class="section" id="intro">
+                <h2>1. Pendahuluan</h2>
+                
+                <h3>Apa itu Sistem Minimarket Sejahtera?</h3>
+                <p>Sistem Informasi Minimarket Sejahtera adalah aplikasi web modern untuk mengelola operasional toko minimarket dengan fitur lengkap meliputi:</p>
+                
+                <ul>
+                    <li>Manajemen produk dan kategori</li>
+                    <li>Sistem Point of Sale (POS) untuk kasir</li>
+                    <li>Platform belanja online untuk customer</li>
+                    <li>Manajemen stok dan inventory</li>
+                    <li>Laporan penjualan dan transaksi</li>
+                    <li>Manajemen pengguna dan role</li>
+                </ul>
+                
+                <div class="success-box">
+                    <strong>✅ Teknologi yang Digunakan:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>PHP 8.0+ (Backend)</li>
+                        <li>MySQL 5.7+ (Database)</li>
+                        <li>HTML5, CSS3, JavaScript (Frontend)</li>
+                        <li>Bootstrap 5 (UI Framework)</li>
+                        <li>Chart.js (Analytics)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- SECTION 2: FITUR UTAMA -->
+            <div class="section" id="fitur">
+                <h2>2. Fitur Utama</h2>
+                
+                <h3>Fitur yang Tersedia</h3>
+                
+                <div class="feature-list">
+                    <div class="feature-card">
+                        <h4>📦 Manajemen Produk</h4>
+                        <p>Tambah, edit, hapus produk dengan upload foto, kategori, harga, dan stok.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🛒 Point of Sale (POS)</h4>
+                        <p>Kasir dapat memproses transaksi cepat dengan cart realtime dan berbagai metode pembayaran.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>🛍️ Toko Online</h4>
+                        <p>Customer bisa browse produk, keranjang belanja, dan checkout order online.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>📊 Laporan & Analitik</h4>
+                        <p>Dashboard analytics dengan chart penjualan, top produk, dan revenue tracking.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>📦 Manajemen Stok</h4>
+                        <p>Track stok produk, sejarah penyesuaian, dan notifikasi stok menipis.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>👥 User Management</h4>
+                        <p>Kelola pengguna dengan role berbeda: Admin, Kasir, dan Customer.</p>
+                    </div>
+                </div>
+                
+                <h3>Role & Permission</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Deskripsi</th>
+                            <th>Akses Utama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-info">ADMIN</span></td>
+                            <td>Super administrator sistem</td>
+                            <td>Semua fitur, kelola user, laporan</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-info">KASIR</span></td>
+                            <td>Operator kasir/POS</td>
+                            <td>POS, transaksi, order management</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-info">CUSTOMER</span></td>
+                            <td>Pelanggan belanja online</td>
+                            <td>Shop, cart, checkout, order history</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- SECTION 3: STRUKTUR FILE -->
+            <div class="section" id="struktur">
+                <h2>3. Struktur File</h2>
+                
+                <h3>Organisasi Folder</h3>
+                <div class="file-structure">
+sera/
+├── index.php              # Login page
+├── logout.php             # Logout handler
+├── config.php             # Konfigurasi & database
+├── admin/                 # Panel admin
+│   ├── index.php          # Dashboard admin
+│   ├── products.php       # Manajemen produk
+│   ├── categories.php     # Manajemen kategori
+│   ├── suppliers.php      # Manajemen supplier
+│   ├── users.php          # Manajemen user
+│   ├── stock.php          # Manajemen stok
+│   ├── reports.php        # Laporan & analytics
+│   └── settings.php       # Pengaturan sistem
+├── kasir/                 # Panel kasir/POS
+│   ├── index.php          # Dashboard kasir
+│   ├── pos.php            # System POS
+│   ├── orders.php         # Order management
+│   ├── transactions.php   # Riwayat transaksi
+│   ├── print_receipt.php  # Print struk
+│   ├── get_transaction_detail.php
+│   └── get_order_details.php
+├── customer/              # Panel customer
+│   ├── index.php          # Dashboard customer
+│   ├── shop.php           # Toko online
+│   ├── cart.php           # Keranjang belanja
+│   ├── checkout.php       # Proses checkout
+│   ├── orders.php         # Riwayat order
+│   ├── profile.php        # Profile customer
+│   └── get_order_details.php
+├── assets/                # Static files
+│   ├── css/
+│   │   ├── style.css
+│   │   └── responsive.css
+│   ├── js/
+│   │   ├── main.js
+│   │   └── chart.min.js
+│   └── images/
+│       └── products/      # Foto produk
+├── includes/              # Helper functions
+│   ├── header.php
+│   ├── footer.php
+│   ├── sidebar.php
+│   └── functions.php
+└── database.sql           # Dump database
+                </div>
+            </div>
+            
+            <!-- SECTION 4: INSTALASI -->
+            <div class="section" id="instalasi">
+                <h2>4. Panduan Instalasi</h2>
+                
+                <h3>Prasyarat</h3>
+                <ul>
+                    <li>PHP 8.0 atau lebih baru</li>
+                    <li>MySQL 5.7 atau lebih baru</li>
+                    <li>Web Server (Apache/Nginx)</li>
+                    <li>Browser modern (Chrome, Firefox, Safari)</li>
+                </ul>
+                
+                <h3>Langkah Instalasi</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Download File Aplikasi</strong>
+                    <p style="margin-top: 10px;">Download semua file aplikasi dari repository atau folder project.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Copy ke Web Root</strong>
+                    <p style="margin-top: 10px;">Copy folder <code>sera</code> ke folder <code>htdocs</code> (XAMPP) atau <code>www</code> (WAMP).</p>
+                    <pre>XAMPP: C:\xampp\htdocs\sera\
+WAMP: C:\wamp64\www\sera\</pre>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Buat Database</strong>
+                    <p style="margin-top: 10px;">Buka phpMyAdmin dan buat database baru bernama <code>minimarket_db</code></p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Import Database</strong>
+                    <p style="margin-top: 10px;">Import file <code>database.sql</code> ke database <code>minimarket_db</code></p>
+                    <pre>phpMyAdmin → Import → pilih database.sql</pre>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Konfigurasi Database (Optional)</strong>
+                    <p style="margin-top: 10px;">Edit <code>config.php</code> jika username/password MySQL berbeda:</p>
+                    <pre>define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');  // Jika ada password
+define('DB_NAME', 'minimarket_db');</pre>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <strong>Akses Aplikasi</strong>
+                    <p style="margin-top: 10px;">Buka browser dan akses <code>http://localhost/sera/</code></p>
+                </div>
+                
+                <div class="success-box">
+                    <strong>✅ Instalasi Selesai!</strong> Anda sekarang bisa login dengan akun default.
+                </div>
+            </div>
+            
+            <!-- SECTION 5: CARA LOGIN -->
+            <div class="section" id="cara-login">
+                <h2>5. Cara Login</h2>
+                
+                <h3>Akun Default (Dari Database)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-info">ADMIN</span></td>
+                            <td><code>admin</code></td>
+                            <td><code>admin123</code></td>
+                            <td>admin@minimarket.com</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-info">KASIR</span></td>
+                            <td><code>kasir</code></td>
+                            <td><code>kasir123</code></td>
+                            <td>kasir@minimarket.com</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-info">CUSTOMER</span></td>
+                            <td><code>customer</code></td>
+                            <td><code>customer123</code></td>
+                            <td>customer@minimarket.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Proses Login</h3>
+                <ol>
+                    <li>Buka halaman login di <code>http://localhost/sera/</code></li>
+                    <li>Masukkan Username dan Password</li>
+                    <li>Klik tombol "Masuk"</li>
+                    <li>Anda akan diarahkan ke dashboard sesuai role</li>
+                </ol>
+                
+                <div class="warning-box">
+                    <strong>⚠️ Penting:</strong> Ubah password akun default setelah instalasi untuk keamanan!
+                </div>
+            </div>
+            
+            <!-- SECTION 6: PANEL ADMIN -->
+            <div class="section" id="admin">
+                <h2>6. Panel Admin</h2>
+                
+                <h3>Akses & Menu</h3>
+                <p>Admin dapat mengakses semua fitur sistem dengan menu utama:</p>
+                
+                <ul>
+                    <li><strong>Dashboard</strong> - Overview sistem dengan statistik</li>
+                    <li><strong>Produk</strong> - CRUD produk dengan foto dan kategori</li>
+                    <li><strong>Kategori</strong> - Manajemen kategori produk</li>
+                    <li><strong>Supplier</strong> - Kelola data supplier</li>
+                    <li><strong>User</strong> - Kelola pengguna sistem</li>
+                    <li><strong>Stok</strong> - Tracking stok dengan sejarah penyesuaian</li>
+                    <li><strong>Laporan</strong> - Analitik penjualan dan revenue</li>
+                    <li><strong>Pengaturan</strong> - Konfigurasi sistem</li>
+                </ul>
+                
+                <h3>Fitur Utama Admin</h3>
+                
+                <h4>📦 Manajemen Produk</h4>
+                <ul>
+                    <li>Tambah produk baru dengan foto</li>
+                    <li>Edit harga, stok, kategori</li>
+                    <li>Set minimum stok</li>
+                    <li>Hapus/nonaktifkan produk</li>
+                    <li>Search produk by nama atau SKU</li>
+                </ul>
+                
+                <h4>👥 Manajemen User</h4>
+                <ul>
+                    <li>Tambah user (Admin, Kasir, Customer)</li>
+                    <li>Edit profil user</li>
+                    <li>Reset password user</li>
+                    <li>Hapus user</li>
+                    <li>View login history</li>
+                </ul>
+                
+                <h4>📊 Laporan & Analytics</h4>
+                <ul>
+                    <li>Dashboard dengan chart penjualan</li>
+                    <li>Top 10 produk terlaris</li>
+                    <li>Penjualan per kategori</li>
+                    <li>Daily sales report</li>
+                    <li>Export laporan PDF</li>
+                </ul>
+                
+                <h4>⚙️ Pengaturan Sistem</h4>
+                <ul>
+                    <li>Informasi sistem (versi, database size)</li>
+                    <li>Statistik pengguna</li>
+                    <li>Backup database</li>
+                    <li>Ganti password admin</li>
+                </ul>
+            </div>
+            
+            <!-- SECTION 7: PANEL KASIR -->
+            <div class="section" id="kasir">
+                <h2>7. Panel Kasir/POS</h2>
+                
+                <h3>Akses & Menu</h3>
+                <p>Kasir menggunakan sistem POS untuk melayani transaksi penjualan:</p>
+                
+                <ul>
+                    <li><strong>Dashboard</strong> - Overview transaksi harian</li>
+                    <li><strong>POS</strong> - Sistem penjualan realtime</li>
+                    <li><strong>Order Customer</strong> - Kelola order dari customer online</li>
+                    <li><strong>Transaksi</strong> - Riwayat semua transaksi kasir</li>
+                </ul>
+                
+                <h3>Cara Menggunakan POS</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Pilih Produk</strong>
+                    <p style="margin-top: 10px;">Klik produk yang ingin dijual. Produk akan masuk ke keranjang.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Atur Jumlah</strong>
+                    <p style="margin-top: 10px;">Gunakan tombol +/- atau input langsung untuk mengatur jumlah barang.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Terapkan Diskon (Opsional)</strong>
+                    <p style="margin-top: 10px;">Input jumlah diskon jika ada di field "Diskon".</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Pilih Metode Pembayaran</strong>
+                    <p style="margin-top: 10px;">Pilih Tunai, Debit, Kredit, atau E-Wallet dari dropdown.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Input Jumlah Bayar</strong>
+                    <p style="margin-top: 10px;">Masukkan jumlah uang yang diterima dari customer.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <strong>Proses Pembayaran</strong>
+                    <p style="margin-top: 10px;">Klik "Proses Pembayaran". Sistem akan otomatis hitung kembalian dan print struk.</p>
+                </div>
+                
+                <h3>Manajemen Order Customer</h3>
+                <ul>
+                    <li>View order dari customer online yang belum dikonfirmasi</li>
+                    <li>Konfirmasi pembayaran order</li>
+                    <li>Batalkan order jika ada kendala</li>
+                    <li>Print packing slip jika ada pengiriman</li>
+                </ul>
+                
+                <h3>Riwayat Transaksi</h3>
+                <ul>
+                    <li>View semua transaksi yang sudah diproses</li>
+                    <li>Filter by tanggal atau metode pembayaran</li>
+                    <li>Print ulang struk transaksi</li>
+                    <li>Lihat detail item transaksi</li>
+                </ul>
+            </div>
+            
+            <!-- SECTION 8: PANEL CUSTOMER -->
+            <div class="section" id="customer">
+                <h2>8. Panel Customer</h2>
+                
+                <h3>Akses & Menu</h3>
+                <p>Customer dapat berbelanja online dengan fitur:</p>
+                
+                <ul>
+                    <li><strong>Dashboard</strong> - Overview order dan statistik</li>
+                    <li><strong>Shop</strong> - Browse dan cari produk</li>
+                    <li><strong>Keranjang</strong> - Kelola item belanja</li>
+                    <li><strong>Order</strong> - Riwayat pesanan</li>
+                    <li><strong>Profile</strong> - Edit profil dan alamat</li>
+                </ul>
+                
+                <h3>Cara Berbelanja</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Login/Register</strong>
+                    <p style="margin-top: 10px;">Login dengan akun customer atau register akun baru.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Browse Produk</strong>
+                    <p style="margin-top: 10px;">Lihat semua produk di halaman Shop dengan filter kategori atau search.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Tambah ke Keranjang</strong>
+                    <p style="margin-top: 10px;">Klik tombol "Tambah ke Keranjang" pada produk pilihan.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Review Keranjang</strong>
+                    <p style="margin-top: 10px;">Lihat semua item di keranjang, ubah jumlah atau hapus item.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Checkout</strong>
+                    <p style="margin-top: 10px;">Isi alamat pengiriman dan pilih metode pembayaran.</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <strong>Konfirmasi Order</strong>
+                    <p style="margin-top: 10px;">Review order summary dan klik "Buat Pesanan".</p>
+                </div>
+                
+                <h3>Riwayat Order</h3>
+                <ul>
+                    <li>Lihat semua order yang pernah dibuat</li>
+                    <li>Filter by status (Pending, Processing, Completed)</li>
+                    <li>Lihat detail item order</li>
+                    <li>Track status pembayaran</li>
+                </ul>
+                
+                <h3>Profile Customer</h3>
+                <ul>
+                    <li>Edit data diri (nama, email, phone)</li>
+                    <li>Simpan alamat pengiriman default</li>
+                    <li>Ubah password</li>
+                    <li>Lihat order statistics</li>
+                </ul>
+            </div>
+            
+            <!-- SECTION 9: DATABASE -->
+            <div class="section" id="database">
+                <h2>9. Struktur Database</h2>
+                
+                <h3>Tabel Utama</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tabel</th>
+                            <th>Deskripsi</th>
+                            <th>Kolom Penting</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>users</code></td>
+                            <td>Data pengguna sistem</td>
+                            <td>id, username, email, password, role</td>
+                        </tr>
+                        <tr>
+                            <td><code>products</code></td>
+                            <td>Data produk toko</td>
+                            <td>id, product_name, price, stock, category_id</td>
+                        </tr>
+                        <tr>
+                            <td><code>categories</code></td>
+                            <td>Kategori produk</td>
+                            <td>id, category_name, description</td>
+                        </tr>
+                        <tr>
+                            <td><code>suppliers</code></td>
+                            <td>Data supplier</td>
+                            <td>id, supplier_name, contact, phone</td>
+                        </tr>
+                        <tr>
+                            <td><code>transactions</code></td>
+                            <td>Transaksi penjualan POS</td>
+                            <td>id, invoice_number, kasir_id, grand_total, payment_method</td>
+                        </tr>
+                        <tr>
+                            <td><code>transaction_details</code></td>
+                            <td>Detail item transaksi</td>
+                            <td>id, transaction_id, product_id, quantity, price</td>
+                        </tr>
+                        <tr>
+                            <td><code>orders</code></td>
+                            <td>Order belanja online</td>
+                            <td>id, order_number, user_id, total_amount, status</td>
+                        </tr>
+                        <tr>
+                            <td><code>order_details</code></td>
+                            <td>Detail item order</td>
+                            <td>id, order_id, product_id, quantity, price</td>
+                        </tr>
+                        <tr>
+                            <td><code>cart</code></td>
+                            <td>Keranjang customer</td>
+                            <td>id, user_id, product_id, quantity</td>
+                        </tr>
+                        <tr>
+                            <td><code>stock_history</code></td>
+                            <td>Riwayat perubahan stok</td>
+                            <td>id, product_id, quantity_change, type, reference</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Relasi Antar Tabel</h3>
+                <ul>
+                    <li><code>products.category_id</code> → <code>categories.id</code></li>
+                    <li><code>products.supplier_id</code> → <code>suppliers.id</code></li>
+                    <li><code>transactions.kasir_id</code> → <code>users.id</code></li>
+                    <li><code>transaction_details.transaction_id</code> → <code>transactions.id</code></li>
+                    <li><code>transaction_details.product_id</code> → <code>products.id</code></li>
+                    <li><code>orders.user_id</code> → <code>users.id</code></li>
+                    <li><code>order_details.order_id</code> → <code>orders.id</code></li>
+                    <li><code>order_details.product_id</code> → <code>products.id</code></li>
+                    <li><code>cart.user_id</code> → <code>users.id</code></li>
+                    <li><code>cart.product_id</code> → <code>products.id</code></li>
+                    <li><code>stock_history.product_id</code> → <code>products.id</code></li>
+                </ul>
+            </div>
+            
+            <!-- SECTION 10: TIPS & TRIK -->
+            <div class="section" id="tips">
+                <h2>10. Tips & Trik</h2>
+                
+                <h3>Tips untuk Admin</h3>
+                <ul>
+                    <li>🔐 <strong>Keamanan:</strong> Ubah password admin secara berkala</li>
+                    <li>📦 <strong>Produk:</strong> Selalu set minimum stok untuk notifikasi otomatis</li>
+                    <li>📊 <strong>Laporan:</strong> Lihat laporan mingguan untuk monitor penjualan</li>
+                    <li>👥 <strong>User:</strong> Jangan biarkan akun tidak terpakai aktif terlalu lama</li>
+                    <li>💾 <strong>Backup:</strong> Lakukan backup database minimal 1x seminggu</li>
+                </ul>
+                
+                <h3>Tips untuk Kasir</h3>
+                <ul>
+                    <li>⚡ <strong>Speed:</strong> Hafalkan kode produk untuk input lebih cepat</li>
+                    <li>💰 <strong>Uang:</strong> Hitung kembalian dengan teliti</li>
+                    <li>📝 <strong>Struk:</strong> Selalu kasih struk ke customer</li>
+                    <li>📦 <strong>Stok:</strong> Bilang ke admin jika ada produk hampir habis</li>
+                    <li>✅ <strong>Order:</strong> Cek order customer 2x sehari minimal</li>
+                </ul>
+                
+                <h3>Tips untuk Customer</h3>
+                <ul>
+                    <li>🔐 <strong>Password:</strong> Jangan share password dengan orang lain</li>
+                    <li>📦 <strong>Order:</strong> Review barang sebelum checkout</li>
+                    <li>💳 <strong>Pembayaran:</strong> Pilih metode pembayaran yang aman</li>
+                    <li>📝 <strong>Alamat:</strong> Pastikan alamat pengiriman benar</li>
+                    <li>🆘 <strong>Bantuan:</strong> Hubungi admin jika ada masalah</li>
+                </ul>
+                
+                <h3>Shortcut Keyboard</h3>
+                <ul>
+                    <li>Ctrl + S - Simpan form</li>
+                    <li>Ctrl + P - Print laporan</li>
+                    <li>Esc - Batal/Close modal</li>
+                    <li>Tab - Pindah field form</li>
+                    <li>Enter - Submit form</li>
+                </ul>
+            </div>
+            
+            <!-- SECTION 11: TROUBLESHOOTING -->
+            <div class="section" id="troubleshooting">
+                <h2>11. Troubleshooting</h2>
+                
+                <h3>Login Gagal</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Username/Password salah atau akun tidak ditemukan<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Pastikan username dan password benar (case-sensitive)</li>
+                        <li>Cek CAPS LOCK tidak aktif</li>
+                        <li>Reset password melalui admin jika lupa</li>
+                        <li>Pastikan database sudah diimport</li>
+                    </ul>
+                </div>
+                
+                <h3>Database Tidak Terhubung</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Error "Connection failed" atau "Database error"<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Pastikan MySQL/MariaDB sudah running</li>
+                        <li>Cek config.php untuk DB_HOST, DB_USER, DB_PASS benar</li>
+                        <li>Pastikan database <code>minimarket_db</code> sudah dibuat</li>
+                        <li>Restart web server (Apache/Nginx)</li>
+                    </ul>
+                </div>
+                
+                <h3>Halaman Blank/Error 500</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Halaman kosong atau error 500<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Cek file permission (755 untuk folder, 644 untuk file)</li>
+                        <li>Lihat PHP error log di console atau terminal</li>
+                        <li>Set error_reporting di config.php</li>
+                        <li>Cek syntax PHP (gunakan `php -l filename.php`)</li>
+                    </ul>
+                </div>
+                
+                <h3>File Upload Gagal</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Foto produk tidak bisa diupload<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Pastikan folder <code>assets/images/products/</code> writable (chmod 777)</li>
+                        <li>Cek ukuran file tidak melebihi 5MB</li>
+                        <li>Pastikan format file JPG, PNG, atau GIF</li>
+                        <li>Restart web server</li>
+                    </ul>
+                </div>
+                
+                <h3>POS Cart Tidak Sync</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Barang tidak masuk keranjang POS<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Reload halaman pos.php</li>
+                        <li>Clear browser cache (Ctrl+Shift+Del)</li>
+                        <li>Buka browser console (F12) cek error JavaScript</li>
+                        <li>Cek session PHP aktif</li>
+                    </ul>
+                </div>
+                
+                <h3>Transaksi Tidak Tersimpan</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Checkout gagal atau transaksi tidak masuk database<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Pastikan cart tidak kosong sebelum checkout</li>
+                        <li>Cek jumlah bayar ≥ grand total</li>
+                        <li>Lihat MySQL error log untuk detail error</li>
+                        <li>Cek foreign key constraints di database</li>
+                    </ul>
+                </div>
+                
+                <h3>Laporan Tidak Muncul Data</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Laporan kosong atau tidak ada data<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Cek filter tanggal tidak terlalu jauh ke masa lalu</li>
+                        <li>Pastikan ada data transaksi di database</li>
+                        <li>Buka browser console cek error ajax</li>
+                        <li>Cek query SQL di admin/reports.php</li>
+                    </ul>
+                </div>
+                
+                <h3>Performance Lambat</h3>
+                <div class="error-box">
+                    <strong>Problem:</strong> Aplikasi berjalan sangat lambat<br>
+                    <strong>Solusi:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Optimize database dengan indexing tabel besar</li>
+                        <li>Limit hasil query (LIMIT 1000)</li>
+                        <li>Enable query caching di MySQL</li>
+                        <li>Upgrade PHP version ke 8.1+</li>
+                        <li>Upgrade RAM server</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <strong>💡 Bantuan Lebih Lanjut:</strong><br>
+                    Jika masalah tidak teratasi, hubungi tim support atau cek error log untuk detail lengkap.
+                </div>
+            </div>
+            
+            <!-- FOOTER -->
+            <div class="footer">
+                <p>📚 <strong>Sistem Informasi Minimarket Sejahtera</strong></p>
+                <p>Dokumentasi Lengkap v1.0</p>
+                <p style="margin-top: 20px; font-size: 12px;">
+                    © 2025 Minimarket Sejahtera. All rights reserved.
+                </p>
+                <p style="margin-top: 10px; font-size: 12px;">
+                    Terakhir diupdate: 21 Desember 2025
+                </p>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
+>>>>>>> 882da412c224f7c20dfb67829049d92fbad8991f

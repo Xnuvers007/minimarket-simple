@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ⚠️ PERHATIAN - FOLDER UPLOAD PRODUK ⚠️
 
 Folder ini digunakan untuk menyimpan gambar produk yang di-upload.
@@ -18,3 +19,25 @@ Contoh: 5f8b9a1c2d3e4f5_1609459200.jpg
 UNTUK TESTING:
 Anda bisa copy gambar produk apapun ke folder ini untuk testing.
 Pastikan nama filenya unik.
+=======
+⚠️ PERHATIAN - FOLDER UPLOAD PRODUK ⚠️
+
+Folder ini digunakan untuk menyimpan gambar produk yang di-upload.
+
+PASTIKAN:
+1. Folder ini memiliki permission WRITE (777 di Linux/Mac)
+2. Jangan hapus file .gitkeep ini
+3. File gambar akan otomatis tersimpan di sini
+
+FORMAT FILE:
+- JPG, JPEG, PNG, GIF
+- Maksimal 5MB
+
+NAMA FILE:
+Format: [unique_id]_[timestamp].extension
+Contoh: 5f8b9a1c2d3e4f5_1609459200.jpg
+
+UNTUK TESTING:
+Anda bisa copy gambar produk apapun ke folder ini untuk testing.
+Pastikan nama filenya unik.
+>>>>>>> 882da412c224f7c20dfb67829049d92fbad8991f
