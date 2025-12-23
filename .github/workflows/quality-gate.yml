@@ -45,4 +45,4 @@ jobs:
         
       # FIX: Command ini sekarang lebih pendek & mengikut standard config file
       - name: Run PHPStan
-        run: phpstan analyse
+        run: phpstan analyse --memory-limit=1G
