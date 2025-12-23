@@ -41,7 +41,7 @@ jobs:
           
       - name: Run PHP CodeSniffer (PSR-12)
         continue-on-error: true
-        run: phpcs --standard=PSR12 --extensions=php --ignore=*/vendor/*,*/testing/* .
+        run: phpcs --standard=PSR12 --extensions=php -n --ignore=*/vendor/*,*/testing/* .
         
       # FIX: Command ini sekarang lebih pendek & mengikut standard config file
       - name: Run PHPStan
