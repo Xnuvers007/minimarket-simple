@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # Job 1: Pastikan Syntax Valid di pelbagai versi PHP
   matrix-compatibility:
     name: 🧪 Test PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
@@ -26,11 +25,10 @@ jobs:
           coverage: none
 
       - name: Check Syntax Error
-        run: find . -name "*.php" -print0 | xargs -0 -n1 php -l
+        run: find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n1 php -l
 
-  # Job 2: Analisis Kod Statik & Gaya Penulisan (Professional Standard)
   static-analysis:
-    name: 🔍 Static Analysis (PHPStan & CS)
+    name: 🔍 Static Analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,13 +36,13 @@ jobs:
       - name: Setup PHP & Tools
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: '8.1'
           tools: phpstan, phpcs
           
-      - name: Run PHP CodeSniffer (PSR-12 Standard)
-        continue-on-error: true # Kita biar dia jalan walaupun fail, untuk report sahaja
+      - name: Run PHP CodeSniffer (PSR-12)
+        continue-on-error: true
         run: phpcs --standard=PSR12 --extensions=php --ignore=*/vendor/*,*/testing/* .
         
-      - name: Run PHPStan (Level 0 - Basic Checks)
-        # Level 0 = check basic error. Naikkan level (max 9) jika kod dah makin stabil.
-        run: phpstan analyse . --level=0 --memory-limit=1G --exclude-paths=*/vendor/*
+      # FIX: Command ini sekarang lebih pendek & mengikut standard config file
+      - name: Run PHPStan
+        run: phpstan analyse
