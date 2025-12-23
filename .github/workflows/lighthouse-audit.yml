@@ -1,0 +1,25 @@
+name: ⚡ PWA & Performance Audit
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP Web Server
+        run: |
+          # Jalankan server PHP sementara di background port 8000
+          php -S localhost:8000 &
+          sleep 5 # Tunggu server hidup
+
+      - name: Audit URL using Lighthouse
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: 'http://localhost:8000/index.php'
+          uploadArtifacts: true # Simpan report HTML sebagai artifact
+          temporaryPublicStorage: true # Upload report ke public server sementara untuk dilihat
+          budgetPath: .github/lighthouse-budget.json # (Pilihan) Set target skor minimum
