@@ -1,4 +1,11 @@
 <?php
+ 
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+*/
+ 
 require_once '../config.php';
 checkRole(['admin']);
 
@@ -36,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_product'])) {
         }
     }
     
-    if (!isset($error)) {
+    if (empty($error)) {
         if ($product_id) {
             // Update
             $stmt = $conn->prepare("UPDATE products SET product_name=?, sku=?, barcode=?, category_id=?, supplier_id=?, price=?, cost_price=?, stock=?, min_stock=?, unit=?, description=?, status=?, image=? WHERE id=?");
-            $stmt->bind_param("sssiiddiisssi", $product_name, $sku, $barcode, $category_id, $supplier_id, $price, $cost_price, $stock, $min_stock, $unit, $description, $status, $image_filename, $product_id);
+            $stmt->bind_param("sssiiddiissssi", $product_name, $sku, $barcode, $category_id, $supplier_id, $price, $cost_price, $stock, $min_stock, $unit, $description, $status, $image_filename, $product_id);
             
             if ($stmt->execute()) {
                 $message = "Produk berhasil diupdate!";
@@ -559,7 +566,7 @@ require_once '../includes/admin_header.php';
                             $categories->data_seek(0);
                             while($cat = $categories->fetch_assoc()): 
                             ?>
-                            <option value="<?php echo $cat['category_id']; ?>" <?php echo ($edit_product['category_id'] ?? '') == $cat['category_id'] ? 'selected' : ''; ?>>
+                            <option value="<?php echo $cat['id']; ?>" <?php echo ($edit_product['category_id'] ?? '') == $cat['id'] ? 'selected' : ''; ?>>
                                 <?php echo $cat['category_name']; ?>
                             </option>
                             <?php endwhile; ?>
@@ -574,7 +581,7 @@ require_once '../includes/admin_header.php';
                             $suppliers->data_seek(0);
                             while($sup = $suppliers->fetch_assoc()): 
                             ?>
-                            <option value="<?php echo $sup['supplier_id']; ?>" <?php echo ($edit_product['supplier_id'] ?? '') == $sup['supplier_id'] ? 'selected' : ''; ?>>
+                            <option value="<?php echo $sup['id']; ?>" <?php echo ($edit_product['supplier_id'] ?? '') == $sup['id'] ? 'selected' : ''; ?>>
                                 <?php echo $sup['supplier_name']; ?>
                             </option>
                             <?php endwhile; ?>

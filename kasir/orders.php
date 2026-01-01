@@ -468,67 +468,82 @@ $orders = $conn->query("SELECT o.*, u.full_name, u.phone FROM orders o LEFT JOIN
         <!-- Orders Grid -->
         <div class="orders-grid">
             <?php if($orders->num_rows > 0): ?>
-                <?php while($order = $orders->fetch_assoc()): ?>
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <div class="order-number">#<?php echo $order['order_number']; ?></div>
-                            <div class="order-date"><?php echo date('d/m/Y H:i', strtotime($order['order_date'])); ?></div>
+<?php while($order = $orders->fetch_assoc()): 
+                // --- PERBAIKAN: DEFINISI VARIABEL AMAN (ANTI ERROR) ---
+                // Cek apakah key 'status' ada? Jika tidak, cek 'order_status', jika tidak ada, default ke 'pending'
+                $safe_status = $order['status'] ?? $order['order_status'] ?? 'pending';
+                
+                // Cek payment_status, default ke 'unpaid'
+                $safe_payment = $order['payment_status'] ?? 'unpaid';
+                
+                // Cek data lain
+                $order_number = $order['order_number'] ?? 'INV-???';
+                $order_date = $order['order_date'] ?? date('Y-m-d H:i:s');
+                $full_name = $order['full_name'] ?? 'Guest';
+                $phone = $order['phone'] ?? '-';
+                $total = $order['total_amount'] ?? 0;
+                $address = $order['shipping_address'] ?? '';
+            ?>
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <div class="order-number">#<?php echo $order_number; ?></div>
+                        <div class="order-date"><?php echo date('d/m/Y H:i', strtotime($order_date)); ?></div>
+                    </div>
+                    <div>
+                        <span class="badge badge-<?php echo $safe_status; ?>">
+                            <?php echo strtoupper($safe_status); ?>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="order-body">
+                    <div class="order-info">
+                        <div class="info-item">
+                            <span class="info-label">Customer</span>
+                            <span class="info-value"><?php echo $full_name; ?></span>
                         </div>
-                        <div>
-                            <span class="badge badge-<?php echo $order['status']; ?>">
-                                <?php echo strtoupper($order['status']); ?>
+                        <div class="info-item">
+                            <span class="info-label">Telepon</span>
+                            <span class="info-value"><?php echo $phone; ?></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total</span>
+                            <span class="info-value" style="color: #667eea;"><?php echo formatRupiah($total); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Pembayaran</span>
+                            <span class="badge badge-<?php echo $safe_payment; ?>">
+                                <?php echo $safe_payment == 'paid' ? 'LUNAS' : 'BELUM BAYAR'; ?>
                             </span>
                         </div>
                     </div>
                     
-                    <div class="order-body">
-                        <div class="order-info">
-                            <div class="info-item">
-                                <span class="info-label">Customer</span>
-                                <span class="info-value"><?php echo $order['full_name']; ?></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Telepon</span>
-                                <span class="info-value"><?php echo $order['phone']; ?></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Total</span>
-                                <span class="info-value" style="color: #667eea;"><?php echo formatRupiah($order['total_amount']); ?></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Pembayaran</span>
-                                <span class="badge badge-<?php echo $order['payment_status']; ?>">
-                                    <?php echo $order['payment_status'] == 'paid' ? 'LUNAS' : 'BELUM BAYAR'; ?>
-                                </span>
-                            </div>
-                        </div>
+                    <?php if(!empty($address)): ?>
+                    <div class="order-items">
+                        <div class="item-header"><i class="fas fa-map-marker-alt"></i> Alamat Pengiriman</div>
+                        <p style="margin: 0; color: #666;"><?php echo nl2br($address); ?></p>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="order-actions">
+                        <button class="btn btn-info" onclick="viewDetails(<?php echo $order['id']; ?>)">
+                            <i class="fas fa-eye"></i> Detail
+                        </button>
                         
-                        <?php if($order['shipping_address']): ?>
-                        <div class="order-items">
-                            <div class="item-header"><i class="fas fa-map-marker-alt"></i> Alamat Pengiriman</div>
-                            <p style="margin: 0; color: #666;"><?php echo nl2br($order['shipping_address']); ?></p>
-                        </div>
+                        <?php if($safe_payment == 'unpaid' && $safe_status != 'cancelled'): ?>
+                        <button class="btn btn-success" onclick="showConfirmModal(<?php echo $order['id']; ?>, '<?php echo $order_number; ?>')">
+                            <i class="fas fa-check-circle"></i> Konfirmasi Bayar
+                        </button>
+                        
+                        <button class="btn btn-danger" onclick="showCancelModal(<?php echo $order['id']; ?>, '<?php echo $order_number; ?>')">
+                            <i class="fas fa-times-circle"></i> Batalkan
+                        </button>
                         <?php endif; ?>
-                        
-                        <div class="order-actions">
-                            <button class="btn btn-info" onclick="viewDetails(<?php echo $order['id']; ?>)">
-                                <i class="fas fa-eye"></i> Detail
-                            </button>
-                            
-                            <?php if($order['payment_status'] == 'unpaid' && $order['status'] != 'cancelled'): ?>
-                            <button class="btn btn-success" onclick="showConfirmModal(<?php echo $order['id']; ?>, '<?php echo $order['order_number']; ?>')">
-                                <i class="fas fa-check-circle"></i> Konfirmasi Bayar
-                            </button>
-                            
-                            <button class="btn btn-danger" onclick="showCancelModal(<?php echo $order['id']; ?>, '<?php echo $order['order_number']; ?>')">
-                                <i class="fas fa-times-circle"></i> Batalkan
-                            </button>
-                            <?php endif; ?>
-                        </div>
                     </div>
                 </div>
-                <?php endwhile; ?>
+            </div>
+            <?php endwhile; ?>
             <?php else: ?>
                 <div class="order-card">
                     <div class="order-body" style="text-align: center; padding: 40px;">

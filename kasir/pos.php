@@ -1,4 +1,9 @@
 <?php
+  
+    ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+    
 require_once '../config.php';
 checkRole(['kasir', 'admin']);
 
@@ -37,67 +42,119 @@ if (isset($_POST['remove_from_cart'])) {
 
 // Handle Checkout
 if (isset($_POST['checkout'])) {
+    // 1. Ambil data keranjang dari kiriman JavaScript (JSON)
+    $cart_data = json_decode($_POST['cart_data'], true);
+    
     $payment_method = $_POST['payment_method'];
     $payment_amount = floatval($_POST['payment_amount']);
     $discount = floatval($_POST['discount'] ?? 0);
     
-    if (empty($_SESSION['pos_cart'])) {
+    // Cek apakah data keranjang ada
+    if (empty($cart_data)) {
         echo json_encode(['success' => false, 'message' => 'Keranjang kosong']);
-        exit;
-    }
-    
-    $total = 0;
-    foreach ($_SESSION['pos_cart'] as $item) {
-        $total += $item['price'] * $item['quantity'];
-    }
-    
-    $grand_total = $total - $discount;
-    $change = $payment_amount - $grand_total;
-    
-    if ($change < 0) {
-        echo json_encode(['success' => false, 'message' => 'Pembayaran kurang']);
         exit;
     }
     
     $conn->begin_transaction();
     
-    try {
+try {
+        $total = 0;
+        $final_cart_items = [];
+
+        // --- VALIDASI STOK (Looping Cart) ---
+        foreach ($cart_data as $id => $item) {
+            if ($item === null) {
+                continue; // Lewati jika data kosong/null
+            }
+            $stmt = $conn->prepare("SELECT price, stock, cost_price FROM products WHERE id = ? FOR UPDATE");
+            if (!$stmt) throw new Exception("SQL Error (Check Product): " . $conn->error); // PENGECEKAN TAMBAHAN
+            
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            $db_product = $res->fetch_assoc();
+
+            if (!$db_product) {
+                throw new Exception("Produk '" . $item['name'] . "' tidak ditemukan di Database (Mungkin ID berubah). Silakan hapus dari keranjang.");
+            }
+
+            if ($db_product['stock'] < $item['quantity']) {
+                throw new Exception("Stok " . $item['name'] . " tidak cukup. Sisa: " . $db_product['stock']);
+            }
+
+            $real_price = $db_product['price'];
+            $total += $real_price * $item['quantity'];
+
+            $final_cart_items[] = [
+                'id' => $id,
+                'quantity' => $item['quantity'],
+                'price' => $real_price,
+                'subtotal' => $real_price * $item['quantity']
+            ];
+        }
+        
+        $grand_total = $total - $discount;
+        $change = $payment_amount - $grand_total;
+        
+        if ($change < 0) {
+            throw new Exception("Pembayaran kurang! Total: " . number_format($grand_total));
+        }
+        
+        // --- SIMPAN TRANSAKSI UTAMA ---
         $invoice = generateInvoiceNumber();
         $kasir_id = $_SESSION['user_id'];
         
+        // Cek SQL Prepare Transactions
         $stmt = $conn->prepare("INSERT INTO transactions (invoice_number, kasir_id, total_amount, discount, grand_total, payment_method, payment_amount, change_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sidddsd d", $invoice, $kasir_id, $total, $discount, $grand_total, $payment_method, $payment_amount, $change);
-        $stmt->execute();
         
+        // JIKA SQL SALAH (Misal nama kolom beda), LEMPAR ERROR JSON
+        if (!$stmt) {
+            throw new Exception("Gagal menyimpan Transaksi: " . $conn->error);
+        }
+
+        $stmt->bind_param("sidddsdd", $invoice, $kasir_id, $total, $discount, $grand_total, $payment_method, $payment_amount, $change);
+        if (!$stmt->execute()) {
+             throw new Exception("Gagal Eksekusi Transaksi: " . $stmt->error);
+        }
         $transaction_id = $conn->insert_id;
         
-        foreach ($_SESSION['pos_cart'] as $product_id => $item) {
-            $subtotal = $item['price'] * $item['quantity'];
-            
+        // --- SIMPAN DETAIL & UPDATE STOK ---
+        foreach ($final_cart_items as $item) {
+            // 1. Insert Detail
             $stmt = $conn->prepare("INSERT INTO transaction_details (transaction_id, product_id, quantity, price, subtotal) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("iiidd", $transaction_id, $product_id, $item['quantity'], $item['price'], $subtotal);
+            if (!$stmt) throw new Exception("SQL Error (Detail): " . $conn->error);
+            
+            $stmt->bind_param("iiidd", $transaction_id, $item['id'], $item['quantity'], $item['price'], $item['subtotal']);
             $stmt->execute();
             
+            // 2. Update Stok
             $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
-            $stmt->bind_param("ii", $item['quantity'], $product_id);
+            if (!$stmt) throw new Exception("SQL Error (Update Stock): " . $conn->error);
+            
+            $stmt->bind_param("ii", $item['quantity'], $item['id']);
             $stmt->execute();
             
+            // 3. History Stok
             $stmt = $conn->prepare("INSERT INTO stock_history (product_id, quantity_change, type, reference, created_by) VALUES (?, ?, 'out', ?, ?)");
-            $qty = -$item['quantity'];
-            $stmt->bind_param("iisi", $product_id, $qty, $invoice, $kasir_id);
+            if (!$stmt) throw new Exception("SQL Error (Stock History): " . $conn->error);
+            
+            $qty_minus = -$item['quantity'];
+            $stmt->bind_param("iisi", $item['id'], $qty_minus, $invoice, $kasir_id);
             $stmt->execute();
         }
         
         $conn->commit();
-        unset($_SESSION['pos_cart']);
+        // unset($_SESSION['pos_cart']);
         
         echo json_encode([
-            'success' => true,
-            'invoice' => $invoice,
+            'success' => true, 
+            'invoice' => $invoice, 
             'change' => $change
         ]);
+
     } catch (Exception $e) {
         $conn->rollback();
+        // Kirim error sebagai JSON bersih
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
     exit;
@@ -673,52 +730,68 @@ $products = $conn->query("SELECT p.*, c.category_name FROM products p LEFT JOIN 
         }
         
         function calculateChange() {
-            const grandTotal = parseFloat(document.getElementById('grandTotal').textContent.replace(/[^0-9]/g, ''));
+            const rawTotal = document.getElementById('grandTotal').textContent.replace(/[^0-9]/g, '');
+            const grandTotal = parseFloat(rawTotal) || 0;
+
             const payment = parseFloat(document.getElementById('paymentAmount').value) || 0;
             const change = payment - grandTotal;
-            
+
             document.getElementById('change').textContent = formatRupiah(Math.max(0, change));
         }
         
-        function checkout() {
+function checkout() {
             if (Object.keys(cart).length === 0) {
                 showModal('error', 'Gagal', 'Keranjang masih kosong');
                 return;
             }
-            
+
             const payment = parseFloat(document.getElementById('paymentAmount').value) || 0;
-            const grandTotal = parseFloat(document.getElementById('grandTotal').textContent.replace(/[^0-9]/g, ''));
-            
+            const grandTotalText = document.getElementById('grandTotal').textContent.replace(/[^0-9,-]+/g,""); 
+            const grandTotal = parseFloat(grandTotalText.replace(',', '.')) || 0;
+
             if (payment < grandTotal) {
                 showModal('error', 'Gagal', 'Jumlah pembayaran kurang');
                 return;
             }
-            
+
             const formData = new FormData();
             formData.append('checkout', '1');
             formData.append('payment_method', document.getElementById('paymentMethod').value);
             formData.append('payment_amount', payment);
             formData.append('discount', document.getElementById('discount').value);
-            
-            fetch('', {
+            formData.append('cart_data', JSON.stringify(cart)); 
+
+            fetch('', { 
                 method: 'POST',
                 body: formData
             })
-            .then(res => res.json())
+            // --- PERUBAHAN PENTING DI SINI ---
+            .then(async res => {
+                const text = await res.text(); // Ambil respons sebagai teks dulu
+                try {
+                    return JSON.parse(text); // Coba ubah ke JSON
+                } catch (err) {
+                    console.error("Server Error Response:", text); // Tampilkan HTML error di Console
+                    throw new Error("Terjadi kesalahan di Server. Cek Console (F12) untuk detailnya.");
+                }
+            })
+            // ---------------------------------
             .then(data => {
                 if (data.success) {
-                    showModal('success', 'Sukses!', `Transaksi berhasil!
-Invoice: ${data.invoice}
-Kembalian: ${formatRupiah(data.change)}`);
-                    cart = {};
+                    showModal('success', 'Sukses!', `Transaksi berhasil! \nInvoice: ${data.invoice} \nKembalian: ${formatRupiah(data.change)}`);
+                    cart = {}; 
                     updateCartDisplay();
                     document.getElementById('discount').value = 0;
                     document.getElementById('paymentAmount').value = '';
                 } else {
                     showModal('error', 'Gagal', data.message);
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showModal('error', 'Error Sistem', error.message);
             });
-        }
+        }        
         
         function showModal(type, title, message) {
             const modal = document.getElementById('resultModal');
