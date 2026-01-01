@@ -12,10 +12,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // =============================================
 // DATABASE CONFIGURATION
 // =============================================
-define('DB_HOST', 'sql111.infinityfree.com');
-define('DB_USER', 'if0_40803099');
-define('DB_PASS', '74vRti0jMu5pgR');
-define('DB_NAME', 'if0_40803099_minimarket_db');
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'minimarket_db');
 
 // =============================================
 // SITE CONFIGURATION
